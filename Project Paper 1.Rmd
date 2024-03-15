@@ -1,0 +1,101 @@
+---
+title: "Project Paper 1"
+author: "Rudi Herrig and Jordan Kim"
+date: "15 March 2024"
+output:
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(tinytex)
+library(readxl)
+library(tidyverse)
+library(stringr)
+library(magrittr)
+
+
+# 1280 rows
+# ADB - production of industries
+# ADE - Men employed in selected industries
+
+production <- read_xlsx("USCensus_1840_county.xlsx")
+
+# 1281 rows
+# ACX - County Borders Navgiable waterway, 1 if yes
+navig <- read_xlsx("USCensusData1840.xlsx")
+
+# 1280 rows
+# ADC - Capital Invested
+# ADD - Persons Employed
+capital <- read_xlsx("USCensusData1840_2.xlsx")
+
+# bigboy is all the data combineds
+bigboy <- production %>% inner_join(navig) %>% inner_join(capital) 
+
+# I seperate the header descriptions into a seperate variable, then clean bigboy up a bit
+bigboy_head <- bigboy %>% slice_head()
+bigboy %<>% slice(-1) %>% select(-YEAR) %>% 
+  mutate(across(starts_with(c("ad", "ac")), as.numeric))
+
+bigboy %<>% mutate(menSum = rowSums(across(starts_with("ADE")))) %>%
+  mutate(peopleSum = rowSums(across(starts_with("ADD"))))  %>% 
+  mutate(capitalSum = rowSums(across(starts_with("ADC"))))
+
+
+
+#remove all rows with NA values
+bigboy <- bigboy[!rowSums(is.na(bigboy)),]
+
+set.seed(303)
+rows <- sample(x=nrow(bigboy),size=floor(0.75*nrow(bigboy)),replace=FALSE)
+
+#separate data
+training <- bigboy[rows,]
+testing <- bigboy[-rows,]
+
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(out.width = "60%",fig.align='center')
+```
+
+
+# The Response Variable 
+
+In this paper, we have deicded to study the response variable peopleSum, which we have created by summing all of the columns in the data that measure how many people work in each industry in a county. Importantly, this sum is distinct from the total amount of men emplyed in each county, which are counted by different columns. The amount of men working in each county and the amount of people working in each county is distinct. peopleSum sums across the columns indicating Persons Workin in Mining, Agriculture, Commerce, Manufacturing, Ocean Navigation, Inland Navigation and "Proffesions" (laywers, politicians etc.). As such, it represents the total amount of people in the county who were employed in 1840. The response variable is distributed with a strong right skew, with most counties having under 10,000 people working, but a few outliers with more than 20,000 people working.
+
+````{r}
+ggplot(data = bigboy, aes(x=peopleSum)) +
+  geom_histogram() +
+  theme_bw()
+````
+
+# The Predictor Variables
+
+The first predictor variable we examine is capitalSum, the total amount of capitial invested in the county. It is somewhat moderately correlated with our response variable. Our second predictor variable is the number of weekly newspapers produced in the county (ADB028), which is again moderately correlated with our response variable. This makes intuitive sense, as the number of weekly newspapers might reflect the total population of the town, which would be highly correlated with the amount of people working in the county. Our third predictor variable is the amount of men employed in making carriages in the county (ADE033), which again is moderately correlated with our response variale. Our fourth predictor variable is the amount of men employed in residential contruction in the county(ADE036), which is moderately correlated with our response variable. All of these response variables have only moderate correlations, but they are the strongest individual predictors I have found. This may be because of the distribution of our response, or the simple variability between counties. 
+````{r}
+modelWork <- lm("peopleSum ~ capitalSum", data = training)
+summary(modelWork)
+
+
+modelNews <-lm("peopleSum ~ ADB023", data = training)
+summary(modelWork2)
+
+
+
+modelCarriage <-lm("peopleSum ~ ADE033", data = training)
+summary(modelWork2)
+
+modelConstr <-lm("peopleSum ~ ADE036", data = training)
+summary(modelWork2)
+
+````
+
+
+# The Null Model
+The RMSE of the null model of the training set, the mean, used on the testing set is roughly 4600, meaning that on averga the null model is 4600 people of from the correct amount of people working in the county. Considering that many counties are clustered around having roughly 5,000 people working, this is a high RMSE. This makes sense as the mean is pulled high but the right skew of peopleSum. 
+
+````{r}
+testing %>% summarize(rmseNull = sqrt(mean((peopleSum-mean(training$peopleSum))^2)))
+````
