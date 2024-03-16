@@ -1,7 +1,7 @@
 ---
 title: "Project Paper 1"
 author: "Rudi Herrig and Jordan Kim"
-date: "15 March 2024"
+date: "17 March 2024"
 output:
   pdf_document: default
 ---
@@ -14,25 +14,95 @@ library(tidyverse)
 library(stringr)
 library(magrittr)
 
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(out.width = "100%",fig.align='center')
+```
+
+```{r}
+# I have split our code into chunks to make it easier to see which code does what
 
 # 1280 rows
 # ADB - production of industries
 # ADE - Men employed in selected industries
-
 production <- read_xlsx("USCensus_1840_county.xlsx")
+# to check for data structure, `summary(production)` is used
 
-# 1281 rows
-# ACX - County Borders Navgiable waterway, 1 if yes
+# 1280 rows
+# ACX - County Borders Navigable waterway, 1 if yes
 navig <- read_xlsx("USCensusData1840.xlsx")
+# There was an extra row in `navig` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
+navig <- navig[-101,]
 
 # 1280 rows
 # ADC - Capital Invested
 # ADD - Persons Employed
 capital <- read_xlsx("USCensusData1840_2.xlsx")
+```
 
-# bigboy is all the data combineds
+```{r}
+# bigboy is all the data sets combined
 bigboy <- production %>% inner_join(navig) %>% inner_join(capital) 
 
+# bignav is to try to salvage the navigable waterway variable as the response
+bignav <- navig %>%  inner_join(capital) %>% inner_join(production)
+# I omit all rows with NAs
+bignav <- na.omit(bignav)
+# bignav has 1257 rows (including Header row) after NA rows are removed
+# separating header row to further clean up the data set
+bignav_head <- bignav %>% slice_head()
+# joiningvariables is the data frame for the rows used for joining (i.e. same as bigboy[,1:9])
+joiningvariables <- bignav[-1, 1:9]
+# I apply as.numeric and as.integer functions to convert columns to integers
+# I apply function to without the header row of the data set and the non-meaningful columns 
+bignavnumconv <- as.data.frame(apply(bignav[-1,10:ncol(bignav)], 2, function(x) as.integer(as.numeric(x))))
+```
+
+```{r}
+# Doing the same as the lines above but in one line
+bigboynav <- as.data.frame(na.omit(sapply(bignav[-1,10:ncol(bignav)], function(x) as.integer(as.numeric(x)), simplify = TRUE, USE.NAMES = TRUE)))
+
+# Visualizing the response variable with some column of capital invested as potential predictor
+plot(bigboynav$ADC011, bigboynav$ACX001, xaxt = "n", yaxt = 'n', xlab = "Capital Invested - Commerce Establishments: Retail stores", ylab = "County Borders Navigable Waterway")
+axis(1, at = axTicks(1), labels = formatC(axTicks(1)/1000, format = "f", digits = 0, big.mark = ","))
+axis(2, at = c(0, 1), labels = c("No", "Yes"))
+
+# Checking column alignment
+colnames(bignav[10:ncol(bignav)]) == colnames(bigboynav)
+# adding the omitted columns and header row back into bigboynav
+bigboynav <- cbind(joiningvariables, bigboynav)
+colnames(bigboynav) <- bignav_head
+colnames(bigboynav)[2]
+
+# I wanted to write the cleaned up data frame into a file.
+# install.packages("openxlsx")
+library(openxlsx)
+write.xlsx(bigboynav, "bigboynav.xlsx")
+```
+
+
+```{r}
+# I want to be able to refer to the columns with these names
+# for (i in 122) {
+#   bignav_head[,i] = bignav_head(colnames(bignav_head)[i])
+# }
+#
+# colnames(bignav)[1,i] = bignav
+
+```
+
+
+```{r}
+# ready to split into training and testing data 3:1
+set.seed(303)
+trows <- sample(x=nrow(bigboynav),size=floor(0.75*nrow(bigboynav)),replace=FALSE)
+#separate data
+train <- bigboynav[trows,]
+test <- bigboynav[-trows,]
+```
+
+```{r}
 # I seperate the header descriptions into a seperate variable, then clean bigboy up a bit
 bigboy_head <- bigboy %>% slice_head()
 bigboy %<>% slice(-1) %>% select(-YEAR) %>% 
@@ -54,30 +124,29 @@ rows <- sample(x=nrow(bigboy),size=floor(0.75*nrow(bigboy)),replace=FALSE)
 training <- bigboy[rows,]
 testing <- bigboy[-rows,]
 
-knitr::opts_chunk$set(echo = FALSE)
-knitr::opts_chunk$set(message = FALSE)
-knitr::opts_chunk$set(warning = FALSE)
-knitr::opts_chunk$set(out.width = "60%",fig.align='center')
+
 ```
 
+# The Response Variable
 
-# The Response Variable 
+In this paper, we have decided to study the response variable peopleSum, which we have created by summing all of the columns in the data that measure how many people work in each industry in a county. Importantly, this sum is distinct from the total amount of men employed in each county, which are counted by different columns. The amount of men working in each county and the amount of people working in each county is distinct. peopleSum sums across the columns indicating Persons Working in Mining, Agriculture, Commerce, Manufacturing, Ocean Navigation, Inland Navigation and "Proffesions" (laywers, politicians etc.). As such, it represents the total amount of people in the county who were employed in 1840. The response variable is distributed with a strong right skew, with most counties having under 10,000 people working, but a few outliers with more than 20,000 people working.
 
-In this paper, we have deicded to study the response variable peopleSum, which we have created by summing all of the columns in the data that measure how many people work in each industry in a county. Importantly, this sum is distinct from the total amount of men emplyed in each county, which are counted by different columns. The amount of men working in each county and the amount of people working in each county is distinct. peopleSum sums across the columns indicating Persons Workin in Mining, Agriculture, Commerce, Manufacturing, Ocean Navigation, Inland Navigation and "Proffesions" (laywers, politicians etc.). As such, it represents the total amount of people in the county who were employed in 1840. The response variable is distributed with a strong right skew, with most counties having under 10,000 people working, but a few outliers with more than 20,000 people working.
-
-````{r}
+```{r}
 ggplot(data = bigboy, aes(x=peopleSum)) +
   geom_histogram() +
   theme_bw()
-````
+```
 
 # The Predictor Variables
 
-The first predictor variable we examine is capitalSum, the total amount of capitial invested in the county. It is somewhat moderately correlated with our response variable. Our second predictor variable is the number of weekly newspapers produced in the county (ADB028), which is again moderately correlated with our response variable. This makes intuitive sense, as the number of weekly newspapers might reflect the total population of the town, which would be highly correlated with the amount of people working in the county. Our third predictor variable is the amount of men employed in making carriages in the county (ADE033), which again is moderately correlated with our response variale. Our fourth predictor variable is the amount of men employed in residential contruction in the county(ADE036), which is moderately correlated with our response variable. All of these response variables have only moderate correlations, but they are the strongest individual predictors I have found. This may be because of the distribution of our response, or the simple variability between counties. 
-````{r}
+The first predictor variable we examine is capitalSum, the total amount of capital invested in the county. It is somewhat moderately correlated with our response variable. Our second predictor variable is the number of weekly newspapers produced in the county (ADB028), which is again moderately correlated with our response variable. This makes intuitive sense, as the number of weekly newspapers might reflect the total population of the town, which would be highly correlated with the amount of people working in the county. Our third predictor variable is the amount of men employed in making carriages in the county (ADE033), which again is moderately correlated with our response variale. Our fourth predictor variable is the amount of men employed in residential contruction in the county(ADE036), which is moderately correlated with our response variable. All of these response variables have only moderate correlations, but they are the strongest individual predictors I have found. This may be because of the distribution of our response, or the simple variability between counties.
+
+```{r}
 modelWork <- lm("peopleSum ~ capitalSum", data = training)
 summary(modelWork)
 
+# modelWork2 was referenced below summary(modelWork2) but undefined
+modelWork2 <- lm("peopleSum ~ capitalSum", data = training)
 
 modelNews <-lm("peopleSum ~ ADB023", data = training)
 summary(modelWork2)
@@ -90,12 +159,12 @@ summary(modelWork2)
 modelConstr <-lm("peopleSum ~ ADE036", data = training)
 summary(modelWork2)
 
-````
-
+```
 
 # The Null Model
-The RMSE of the null model of the training set, the mean, used on the testing set is roughly 4600, meaning that on averga the null model is 4600 people of from the correct amount of people working in the county. Considering that many counties are clustered around having roughly 5,000 people working, this is a high RMSE. This makes sense as the mean is pulled high but the right skew of peopleSum. 
 
-````{r}
+The RMSE of the null model of the training set, the mean, used on the testing set is roughly 4600, meaning that on average the null model is 4600 people of from the correct amount of people working in the county. Considering that many counties are clustered around having roughly 5,000 people working, this is a high RMSE. This makes sense as the mean is pulled high but the right skew of peopleSum.
+
+```{r}
 testing %>% summarize(rmseNull = sqrt(mean((peopleSum-mean(training$peopleSum))^2)))
-````
+```
