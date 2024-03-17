@@ -11,7 +11,7 @@ library(magrittr)
 production <- read_xlsx("USCensus_1840_county.xlsx")
 
 # 1281 rows
-# ACX - County Borders Navgiable waterway, 1 if yes
+# ACX - County Borders Navigable waterway, 1 if yes
 navig <- read_xlsx("USCensusData1840.xlsx")
 
 # 1280 rows
@@ -19,10 +19,10 @@ navig <- read_xlsx("USCensusData1840.xlsx")
 # ADD - Persons Employed
 capital <- read_xlsx("USCensusData1840_2.xlsx")
 
-# bigboy is all the data combineds
+# bigboy is all the data sets combined
 bigboy <- production %>% inner_join(navig) %>% inner_join(capital) 
 
-# I seperate the header descriptions into a seperate variable, then clean bigboy up a bit
+# I separate the header descriptions into a separate variable, then clean bigboy up a bit
 bigboy_head <- bigboy %>% slice_head()
 bigboy %<>% slice(-1) %>% select(-YEAR) %>% 
   mutate(across(starts_with(c("ad", "ac")), as.numeric))

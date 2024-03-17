@@ -13,6 +13,11 @@ library(readxl)
 library(tidyverse)
 library(stringr)
 library(magrittr)
+library(ggplot2)
+# install.packages("corrr")
+library(corrr)
+# install.packages("corrplot")
+library(corrplot)
 
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(message = FALSE)
@@ -22,6 +27,7 @@ knitr::opts_chunk$set(out.width = "100%",fig.align='center')
 
 ```{r}
 # I have split our code into chunks to make it easier to see which code does what
+# I have also commented the code to make it easier to understand
 
 # 1280 rows
 # ADB - production of industries
@@ -64,25 +70,37 @@ bignavnumconv <- as.data.frame(apply(bignav[-1,10:ncol(bignav)], 2, function(x) 
 bigboynav <- as.data.frame(na.omit(sapply(bignav[-1,10:ncol(bignav)], function(x) as.integer(as.numeric(x)), simplify = TRUE, USE.NAMES = TRUE)))
 
 # Visualizing the response variable with some column of capital invested as potential predictor
-plot(bigboynav$ADC011, bigboynav$ACX001, xaxt = "n", yaxt = 'n', xlab = "Capital Invested - Commerce Establishments: Retail stores", ylab = "County Borders Navigable Waterway")
-axis(1, at = axTicks(1), labels = formatC(axTicks(1)/1000, format = "f", digits = 0, big.mark = ","))
-axis(2, at = c(0, 1), labels = c("No", "Yes"))
+ggplot(bigboynav, aes(x=ADC011, y=ACX001)) +
+  geom_point() +
+  geom_jitter(height=0.05,size=2,alpha=0.2) +
+  scale_y_continuous(breaks = c(0, 1)) +
+  scale_x_continuous(labels = function(x) paste0(x / 1000, "k")) +
+  theme_bw()
+
 
 # Checking column alignment
-colnames(bignav[10:ncol(bignav)]) == colnames(bigboynav)
+# colnames(bignav[10:ncol(bignav)]) == colnames(bigboynav)
+
 # adding the omitted columns and header row back into bigboynav
 bigboynav <- cbind(joiningvariables, bigboynav)
-colnames(bigboynav) <- bignav_head
-colnames(bigboynav)[2]
+```
+```{r}
+str(colnames(bigboynav[1]))
+str(colnames(bigboynav)[1])
+bigboynav
+```
 
+```{r}
 # I wanted to write the cleaned up data frame into a file.
 # install.packages("openxlsx")
 library(openxlsx)
 write.xlsx(bigboynav, "bigboynav.xlsx")
+write.xlsx(bignav, "bignav.xlsx")
 ```
 
 
 ```{r}
+descriptors <- t(bignav[1,])
 # I want to be able to refer to the columns with these names
 # for (i in 122) {
 #   bignav_head[,i] = bignav_head(colnames(bignav_head)[i])
@@ -123,12 +141,76 @@ rows <- sample(x=nrow(bigboy),size=floor(0.75*nrow(bigboy)),replace=FALSE)
 #separate data
 training <- bigboy[rows,]
 testing <- bigboy[-rows,]
-
-
 ```
 
 # The Response Variable
+We initially had trouble configuring our data and model to predict the response variable, County Borders Navigable Waterway (ACX001). So we then created new choices for the response variable, namely, peopleSum and capitalSum. We will explain.
 
+## ACX001 - County Borders Navigable Waterway
+Let's build a logistic regression model to predict the presence of navigable waterways in a county. We will use the following predictor variables: ADD006 - "Persons employed in inland navigation", ADC014 - "Manufacturing Establishments: Fisheries", ADB004 - "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", and ADB013 - "Flour: barrels manufactured". We will use the glm function, binomial family, and ACX001~ADD006+ADC014+ADB004+ADB013+ADE011 formula to build a multiple logistic regression model. As seen above, we have split our data 80-20 into training and testing sets, for testing our model's performance.
+```{r}
+County_Access_Navigable_Waterway <- bigboynav$ACX001
+Persons_Employed_Inland_Navigation <- bigboynav$ADD006
+Manufacturing_Establishments_Fisheries <- bigboynav$ADC014
+Forest_Products_Tar_Pitch_Terpentine_Resin <- bigboynav$ADB004
+Flour_Barrels_Manufactured <- bigboynav$ADB013
+# Visualizing data we're interested in to learn more about relationships among data set
+ggplot(bigboynav, aes(x=Persons_Employed_Inland_Navigation, y=County_Access_Navigable_Waterway)) +
+  geom_point() +
+  geom_jitter(height=0.05,size=2,alpha=0.2) +
+  scale_y_continuous(breaks = c(0, 1)) +
+  theme_bw()
+```
+
+
+```{r}
+ggplot(bigboynav, aes(x=Manufacturing_Establishments_Fisheries, y=County_Access_Navigable_Waterway)) +
+  geom_point() +
+  geom_jitter(height=0.05,size=2,alpha=0.2) +
+  scale_y_continuous(breaks = c(0, 1)) +
+  scale_x_continuous(labels = function(x) paste0(x / 1e6, "M")) +
+  labs(x = "Manufacturing_Establishments_Fisheries (Capital invested in Millions of $USD)") +
+  theme_bw()
+```
+
+
+```{r}
+ggplot(bigboynav, aes(x=Forest_Products_Tar_Pitch_Terpentine_Resin, y=County_Access_Navigable_Waterway)) +
+  geom_point() +
+  geom_jitter(height=0.05,size=2,alpha=0.2) +
+  scale_y_continuous(breaks = c(0, 1)) +
+  scale_x_continuous(labels = function(x) paste0(x / 1000, "k")) +
+  labs(x = "Forest_Products_Tar_Pitch_Terpentine_Resin (Number of Barrels produced, 300~400lbs/barrel)") +
+  theme_bw()
+```
+
+
+```{r}
+ggplot(bigboynav, aes(x=Flour_Barrels_Manufactured, y=County_Access_Navigable_Waterway)) +
+  geom_point() +
+  geom_jitter(height=0.05,size=2,alpha=0.2) +
+  scale_y_continuous(breaks = c(0, 1)) +
+  scale_x_continuous(labels = function(x) paste0(x / 1000, "k")) +
+  labs(x = "Flour_Barrels_Manufactured (Number of Barrels produced, 196lbs/barrel)") +
+  theme_bw()
+```
+
+
+```{r}
+# building logistic regression model using whole dataset
+nwmodel <- glm(ACX001~ADD006+ADC014+ADB004+ADB013, data = bigboynav, family = "binomial")
+summary(nwmodel)
+```
+The $p-$values for the predictor variables are all less than 0.05, so we can conclude that there is a significant relationship between the predictor variables and the response variable. Thus we can conclude that our choice of predictor variables was reasonable, at least based on the model trained on the whole data set. There's a statistically significant relationship between a county's access to navigable waterways and the number of people employed in inland navigation, the number of manufacturing establishments in fisheries, and the number of barrels of tar, pitch, turpentine, and resin produced, and the number of barrels of flour produced. Let's look at how this changes when our model is trained on `train`.
+
+```{r}
+# building model using train data
+nwtmodel <- glm(ACX001~ADD006+ADC014+ADB004+ADB013, data = train, family = "binomial")
+summary(nwtmodel)
+```
+The model trained on the training set has similar results as the one above, but for ADB004, the p-value is now 0.3713, suggesting that the number of barrels of tar, pitch, turpentine, and resin produced is not a significant predictor of a county's access to navigable waterways. This is a good example of how the results of a model can change when the model is trained on different data. To explore our curiosities, we will use both the model trained on the whole data set and one trained on `train` to predict the response variable in the testing set.
+
+# what to do with section below TBD. Will ask Dr. Pruitt if we may build multiple models using the 3 response variable choices.
 In this paper, we have decided to study the response variable peopleSum, which we have created by summing all of the columns in the data that measure how many people work in each industry in a county. Importantly, this sum is distinct from the total amount of men employed in each county, which are counted by different columns. The amount of men working in each county and the amount of people working in each county is distinct. peopleSum sums across the columns indicating Persons Working in Mining, Agriculture, Commerce, Manufacturing, Ocean Navigation, Inland Navigation and "Proffesions" (laywers, politicians etc.). As such, it represents the total amount of people in the county who were employed in 1840. The response variable is distributed with a strong right skew, with most counties having under 10,000 people working, but a few outliers with more than 20,000 people working.
 
 ```{r}
@@ -138,7 +220,11 @@ ggplot(data = bigboy, aes(x=peopleSum)) +
 ```
 
 # The Predictor Variables
-
+We have chosen to use the following predictor variables to predict counties' access to navigable waterways:
+### ADD006 - Persons Employed in Inland Navigation
+### ADC014 - Manufacturing Establishments: Fisheries
+### ADB004 - Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced
+### ADB013 - Flour: barrels manufactured
 The first predictor variable we examine is capitalSum, the total amount of capital invested in the county. It is somewhat moderately correlated with our response variable. Our second predictor variable is the number of weekly newspapers produced in the county (ADB028), which is again moderately correlated with our response variable. This makes intuitive sense, as the number of weekly newspapers might reflect the total population of the town, which would be highly correlated with the amount of people working in the county. Our third predictor variable is the amount of men employed in making carriages in the county (ADE033), which again is moderately correlated with our response variale. Our fourth predictor variable is the amount of men employed in residential contruction in the county(ADE036), which is moderately correlated with our response variable. All of these response variables have only moderate correlations, but they are the strongest individual predictors I have found. This may be because of the distribution of our response, or the simple variability between counties.
 
 ```{r}
