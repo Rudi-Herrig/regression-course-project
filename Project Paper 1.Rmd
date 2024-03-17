@@ -144,21 +144,24 @@ testing <- bigboy[-rows,]
 ```
 
 # The Response Variable
-We initially had trouble configuring our data and model to predict the response variable, County Borders Navigable Waterway (ACX001). So we then created new choices for the response variable, namely, peopleSum and capitalSum. We will explain.
+We initially had trouble configuring our data and model to predict the response variable, County Borders Navigable Waterway (ACX001). So we then created new choices for the response variable, namely, peopleSum and capitalSum. We tried building alternate models using these as the response variable, we will explain.
 
 ## ACX001 - County Borders Navigable Waterway
 Let's build a logistic regression model to predict the presence of navigable waterways in a county. We will use the following predictor variables: ADD006 - "Persons employed in inland navigation", ADC014 - "Manufacturing Establishments: Fisheries", ADB004 - "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", and ADB013 - "Flour: barrels manufactured". We will use the glm function, binomial family, and ACX001~ADD006+ADC014+ADB004+ADB013+ADE011 formula to build a multiple logistic regression model. As seen above, we have split our data 80-20 into training and testing sets, for testing our model's performance.
+
 ```{r}
 County_Access_Navigable_Waterway <- bigboynav$ACX001
 Persons_Employed_Inland_Navigation <- bigboynav$ADD006
 Manufacturing_Establishments_Fisheries <- bigboynav$ADC014
 Forest_Products_Tar_Pitch_Terpentine_Resin <- bigboynav$ADB004
 Flour_Barrels_Manufactured <- bigboynav$ADB013
+
 # Visualizing data we're interested in to learn more about relationships among data set
 ggplot(bigboynav, aes(x=Persons_Employed_Inland_Navigation, y=County_Access_Navigable_Waterway)) +
   geom_point() +
   geom_jitter(height=0.05,size=2,alpha=0.2) +
   scale_y_continuous(breaks = c(0, 1)) +
+  labs(y = "County_Access_Navigable_Waterway (1=Yes)") +
   theme_bw()
 ```
 
@@ -169,7 +172,7 @@ ggplot(bigboynav, aes(x=Manufacturing_Establishments_Fisheries, y=County_Access_
   geom_jitter(height=0.05,size=2,alpha=0.2) +
   scale_y_continuous(breaks = c(0, 1)) +
   scale_x_continuous(labels = function(x) paste0(x / 1e6, "M")) +
-  labs(x = "Manufacturing_Establishments_Fisheries (Capital invested in Millions of $USD)") +
+  labs(x = "Manufacturing_Establishments_Fisheries (Capital invested in Millions of $USD)", y = "County_Access_Navigable_Waterway (1=Yes)") +
   theme_bw()
 ```
 
@@ -180,7 +183,7 @@ ggplot(bigboynav, aes(x=Forest_Products_Tar_Pitch_Terpentine_Resin, y=County_Acc
   geom_jitter(height=0.05,size=2,alpha=0.2) +
   scale_y_continuous(breaks = c(0, 1)) +
   scale_x_continuous(labels = function(x) paste0(x / 1000, "k")) +
-  labs(x = "Forest_Products_Tar_Pitch_Terpentine_Resin (Number of Barrels produced, 300~400lbs/barrel)") +
+  labs(x = "Forest_Products_Tar_Pitch_Terpentine_Resin (Number of Barrels produced, 300~400lbs/barrel)", y = "County_Access_Navigable_Waterway (1=Yes)") +
   theme_bw()
 ```
 
@@ -191,7 +194,7 @@ ggplot(bigboynav, aes(x=Flour_Barrels_Manufactured, y=County_Access_Navigable_Wa
   geom_jitter(height=0.05,size=2,alpha=0.2) +
   scale_y_continuous(breaks = c(0, 1)) +
   scale_x_continuous(labels = function(x) paste0(x / 1000, "k")) +
-  labs(x = "Flour_Barrels_Manufactured (Number of Barrels produced, 196lbs/barrel)") +
+  labs(x = "Flour_Barrels_Manufactured (Number of Barrels produced, 196lbs/barrel)", y = "County_Access_Navigable_Waterway (1=Yes)") +
   theme_bw()
 ```
 
@@ -210,6 +213,15 @@ summary(nwtmodel)
 ```
 The model trained on the training set has similar results as the one above, but for ADB004, the p-value is now 0.3713, suggesting that the number of barrels of tar, pitch, turpentine, and resin produced is not a significant predictor of a county's access to navigable waterways. This is a good example of how the results of a model can change when the model is trained on different data. To explore our curiosities, we will use both the model trained on the whole data set and one trained on `train` to predict the response variable in the testing set.
 
+# Response Variable Distributions
+Let's plot a histogram, even though `County_Access_Navigable_Waterway` is actually a binary variable, we've treated it as a continuous variable with only 0 and 1 as possible values, we will use a histogram(continuous) instead of a barchart(discrete) to visualize the distribution.
+```{r}
+hist(County_Access_Navigable_Waterway, main = "County Access to Navigable Waterway", xlab = "County Access to Navigable Waterway", ylab = "Number of Counties", breaks=25, col = "lightblue", xaxt = "n")
+axis(1, at = c(0, 1), labels = c("No", "Yes"))
+```
+It seems that about half of the counties do have access to water transportation which would allow for cheaper costs to engage in economic activities. This is a good sign for our model, as we have a good amount of data for both classes of the response variable.
+
+
 # what to do with section below TBD. Will ask Dr. Pruitt if we may build multiple models using the 3 response variable choices.
 In this paper, we have decided to study the response variable peopleSum, which we have created by summing all of the columns in the data that measure how many people work in each industry in a county. Importantly, this sum is distinct from the total amount of men employed in each county, which are counted by different columns. The amount of men working in each county and the amount of people working in each county is distinct. peopleSum sums across the columns indicating Persons Working in Mining, Agriculture, Commerce, Manufacturing, Ocean Navigation, Inland Navigation and "Proffesions" (laywers, politicians etc.). As such, it represents the total amount of people in the county who were employed in 1840. The response variable is distributed with a strong right skew, with most counties having under 10,000 people working, but a few outliers with more than 20,000 people working.
 
@@ -221,10 +233,45 @@ ggplot(data = bigboy, aes(x=peopleSum)) +
 
 # The Predictor Variables
 We have chosen to use the following predictor variables to predict counties' access to navigable waterways:
+Let's graph the distributions of these predictor variables to see how they are distributed. We expect to see more skewness in the distributions, unlike the symmetry in the distribution of our response variable ACX001. The data points that skew would be outliers or counties with very high or very low predictor variable values that are not representative of the typical US county circa 1840. We will also look at the correlation between the predictor variables and the response variable to see if there is a relationship between the two. We will use the corrr package to visualize the correlation matrix of the predictor variables and the response variable.
+
 ### ADD006 - Persons Employed in Inland Navigation
+
+```{r}
+hist(Persons_Employed_Inland_Navigation, main = "Persons Employed in Inland Navigation", xlab = "Persons Employed in Inland Navigation", ylab = "Number of Counties", col = "lightblue")
+```
+
 ### ADC014 - Manufacturing Establishments: Fisheries
+```{r}
+hist(Manufacturing_Establishments_Fisheries, main = "Manufacturing Establishments: Fisheries", xlab = "Manufacturing Establishments: Fisheries (Capital invested in Millions of $USD)", ylab = "Number of Counties", col = "lightblue", xaxt = "n", breaks=60)
+axis(1, at = breaks, labels = paste0(breaks/1e6, "M"))
+```
+```{r}
+hist(Manufacturing_Establishments_Fisheries, main = "Manufacturing Establishments: Fisheries", xlab = "Manufacturing Establishments: Fisheries (Capital invested in $USD (not millions))", ylab = "Number of Counties", col = "lightblue", breaks=15000, xlim=c(0, 3000), xaxt='n')
+axis(1, at = seq(0,3000,100), labels = paste0(seq(0,3000,100)))
+```
+Even when zoomed in to just (0,3000) on the x-axis, the histogram isn't very helpful. There seems to be an extreme outlier.
+
+
 ### ADB004 - Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced
+```{r}
+hist(Forest_Products_Tar_Pitch_Terpentine_Resin, main = "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", xlab = "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", ylab = "Number of Counties", col = "lightblue")
+```
+Again, there's an extreme outlier. 
+```{r}
+hist(Forest_Products_Tar_Pitch_Terpentine_Resin, main = "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", xlab = "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", ylab = "Number of Counties", col = "lightblue", breaks=1500, xlim=c(0, 1500), xaxt='n')
+axis(1, at = seq(0,1500,300), labels = paste0(seq(0,1500,300)))
+```
+
+
 ### ADB013 - Flour: barrels manufactured
+```{r}
+hist(Flour_Barrels_Manufactured, main = "Flour: barrels manufactured", xlab = "Flour: barrels manufactured", ylab = "Number of Counties", col = "lightblue", breaks=150, xlim=c(0, 50000), xaxt='n')
+axis(1, at = seq(0,50000,5000), labels = paste0(seq(0,50000,5000)))
+```
+
+
+# TBD about capitalSum and peopleSum as response variables
 The first predictor variable we examine is capitalSum, the total amount of capital invested in the county. It is somewhat moderately correlated with our response variable. Our second predictor variable is the number of weekly newspapers produced in the county (ADB028), which is again moderately correlated with our response variable. This makes intuitive sense, as the number of weekly newspapers might reflect the total population of the town, which would be highly correlated with the amount of people working in the county. Our third predictor variable is the amount of men employed in making carriages in the county (ADE033), which again is moderately correlated with our response variale. Our fourth predictor variable is the amount of men employed in residential contruction in the county(ADE036), which is moderately correlated with our response variable. All of these response variables have only moderate correlations, but they are the strongest individual predictors I have found. This may be because of the distribution of our response, or the simple variability between counties.
 
 ```{r}
