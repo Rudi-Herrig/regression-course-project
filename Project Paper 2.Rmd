@@ -25,6 +25,16 @@ knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(out.width = "100%",fig.align='center')
 ```
 
+# what to do with section below TBD. Will ask Dr. Pruitt if we may build multiple models using the 3 response variable choices.
+In this paper, we have decided to study the response variable peopleSum, which we have created by summing all of the columns in the data that measure how many people work in each industry in a county. Importantly, this sum is distinct from the total amount of men employed in each county, which are counted by different columns. The amount of men working in each county and the amount of people working in each county is distinct. peopleSum sums across the columns indicating Persons Working in Mining, Agriculture, Commerce, Manufacturing, Ocean Navigation, Inland Navigation and "Proffesions" (laywers, politicians etc.). As such, it represents the total amount of people in the county who were employed in 1840. The response variable is distributed with a strong right skew, with most counties having under 10,000 people working, but a few outliers with more than 20,000 people working.
+
+```{r}
+ggplot(data = bigboy, aes(x=peopleSum)) +
+  geom_histogram() +
+  theme_bw()
+```
+
+
 ```{r}
 # I have split our code into chunks to make it easier to see which code does what
 # I have also commented the code to make it easier to understand
@@ -61,7 +71,7 @@ bignav_head <- bignav %>% slice_head()
 # joiningvariables is the data frame for the rows used for joining (i.e. same as bigboy[,1:9])
 joiningvariables <- bignav[-1, 1:9]
 # I apply as.numeric and as.integer functions to convert columns to integers
-# I apply function to convert only the meaningful portion of our data set, without the header row and the non-meaningful (identifying) columns of the data set.
+# I apply function to without the header row of the data set and the non-meaningful columns 
 bignavnumconv <- as.data.frame(apply(bignav[-1,10:ncol(bignav)], 2, function(x) as.integer(as.numeric(x))))
 ```
 
@@ -84,6 +94,11 @@ ggplot(bigboynav, aes(x=ADC011, y=ACX001)) +
 # adding the omitted columns and header row back into bigboynav
 bigboynav <- cbind(joiningvariables, bigboynav)
 ```
+```{r}
+str(colnames(bigboynav[1]))
+str(colnames(bigboynav)[1])
+bigboynav
+```
 
 ```{r}
 # I wanted to write the cleaned up data frame into a file.
@@ -96,7 +111,6 @@ write.xlsx(bignav, "bignav.xlsx")
 
 ```{r}
 descriptors <- t(bignav[1,])
-# `descriptors` is equal to `joiningvariables` transposed
 ```
 
 
@@ -109,11 +123,34 @@ train <- bigboynav[trows,]
 test <- bigboynav[-trows,]
 ```
 
+```{r}
+# I separate the header descriptions into a separate variable, then clean bigboy up a bit
+bigboy_head <- bigboy %>% slice_head()
+bigboy %<>% slice(-1) %>% select(-YEAR) %>% 
+  mutate(across(starts_with(c("ad", "ac")), as.numeric))
+
+bigboy %<>% mutate(menSum = rowSums(across(starts_with("ADE")))) %>%
+  mutate(peopleSum = rowSums(across(starts_with("ADD"))))  %>% 
+  mutate(capitalSum = rowSums(across(starts_with("ADC"))))
+
+
+
+#remove all rows with NA values
+bigboy <- bigboy[!rowSums(is.na(bigboy)),]
+
+set.seed(303)
+rows <- sample(x=nrow(bigboy),size=floor(0.75*nrow(bigboy)),replace=FALSE)
+
+#separate data
+training <- bigboy[rows,]
+testing <- bigboy[-rows,]
+```
+
 # The Response Variable
 We initially had trouble configuring our data and model to predict the response variable, County Borders Navigable Waterway (ACX001). So we then created new choices for the response variable, namely, peopleSum and capitalSum. We tried building alternate models using these as the response variable, we will explain.
 
 ## ACX001 - County Borders Navigable Waterway
-Let us build a logistic regression model to predict the presence of (or access to) navigable waterways in a county. We will use the following predictor variables: ADD006 - "Persons employed in inland navigation", ADC014 - "Manufacturing Establishments: Fisheries", ADB004 - "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", and ADB013 - "Flour: barrels manufactured". We will use the glm function, binomial family, and ACX001~ADD006+ADC014+ADB004+ADB013+ADE011 formula to build a multiple logistic regression model. As seen above, we have split our data into training and testing sets, for testing our model's performance.
+Let's build a logistic regression model to predict the presence of navigable waterways in a county. We will use the following predictor variables: ADD006 - "Persons employed in inland navigation", ADC014 - "Manufacturing Establishments: Fisheries", ADB004 - "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", and ADB013 - "Flour: barrels manufactured". We will use the glm function, binomial family, and ACX001~ADD006+ADC014+ADB004+ADB013+ADE011 formula to build a multiple logistic regression model. As seen above, we have split our data 80-20 into training and testing sets, for testing our model's performance.
 
 ```{r}
 County_Access_Navigable_Waterway <- bigboynav$ACX001
@@ -121,58 +158,47 @@ Persons_Employed_Inland_Navigation <- bigboynav$ADD006
 Manufacturing_Establishments_Fisheries <- bigboynav$ADC014
 Forest_Products_Tar_Pitch_Terpentine_Resin <- bigboynav$ADB004
 Flour_Barrels_Manufactured <- bigboynav$ADB013
-modelvariables <- bigboynav %>%
-  select(ACX001, ADD006, ADC014, ADB004, ADB013)
 
 # Visualizing data we're interested in to learn more about relationships among data set
-ADD006 <- ggplot(bigboynav, aes(x=Persons_Employed_Inland_Navigation, y=County_Access_Navigable_Waterway)) +
+ggplot(bigboynav, aes(x=Persons_Employed_Inland_Navigation, y=County_Access_Navigable_Waterway)) +
   geom_point() +
   geom_jitter(height=0.05,size=2,alpha=0.2) +
   scale_y_continuous(breaks = c(0, 1)) +
   labs(y = "County_Access_Navigable_Waterway (1=Yes)") +
   theme_bw()
-ADD006
-ggsave("ADD006.png", plot=ADD006)
 ```
 
 
 ```{r}
-ADC014 <- ggplot(bigboynav, aes(x=Manufacturing_Establishments_Fisheries, y=County_Access_Navigable_Waterway)) +
+ggplot(bigboynav, aes(x=Manufacturing_Establishments_Fisheries, y=County_Access_Navigable_Waterway)) +
   geom_point() +
   geom_jitter(height=0.05,size=2,alpha=0.2) +
   scale_y_continuous(breaks = c(0, 1)) +
   scale_x_continuous(labels = function(x) paste0(x / 1e6, "M")) +
   labs(x = "Manufacturing_Establishments_Fisheries (Capital invested in Millions of $USD)", y = "County_Access_Navigable_Waterway (1=Yes)") +
   theme_bw()
-ADC014
-ggsave("ADC014.png", plot=ADC014)
-
 ```
 
 
 ```{r}
-ADB004 <- ggplot(bigboynav, aes(x=Forest_Products_Tar_Pitch_Terpentine_Resin, y=County_Access_Navigable_Waterway)) +
+ggplot(bigboynav, aes(x=Forest_Products_Tar_Pitch_Terpentine_Resin, y=County_Access_Navigable_Waterway)) +
   geom_point() +
   geom_jitter(height=0.05,size=2,alpha=0.2) +
   scale_y_continuous(breaks = c(0, 1)) +
   scale_x_continuous(labels = function(x) paste0(x / 1000, "k")) +
   labs(x = "Forest_Products_Tar_Pitch_Terpentine_Resin (Number of Barrels produced, 300~400lbs/barrel)", y = "County_Access_Navigable_Waterway (1=Yes)") +
   theme_bw()
-ADB004
-ggsave("ADB004.png", plot=ADB004)
 ```
 
 
 ```{r}
-ADB013 <- ggplot(bigboynav, aes(x=Flour_Barrels_Manufactured, y=County_Access_Navigable_Waterway)) +
+ggplot(bigboynav, aes(x=Flour_Barrels_Manufactured, y=County_Access_Navigable_Waterway)) +
   geom_point() +
   geom_jitter(height=0.05,size=2,alpha=0.2) +
   scale_y_continuous(breaks = c(0, 1)) +
   scale_x_continuous(labels = function(x) paste0(x / 1000, "k")) +
   labs(x = "Flour_Barrels_Manufactured (Number of Barrels produced, 196lbs/barrel)", y = "County_Access_Navigable_Waterway (1=Yes)") +
   theme_bw()
-ADB013
-ggsave("ADB013.png", plot=ADB013)
 ```
 
 
@@ -190,14 +216,23 @@ summary(nwtmodel)
 ```
 The model trained on the training set has similar results as the one above, but for ADB004, the p-value is now 0.3713, suggesting that the number of barrels of tar, pitch, turpentine, and resin produced is not a significant predictor of a county's access to navigable waterways. This is a good example of how the results of a model can change when the model is trained on different data. To explore our curiosities, we will use both the model trained on the whole data set and one trained on `train` to predict the response variable in the testing set.
 
-# Response Variable Distributions
-Let's plot a histogram, even though `County_Access_Navigable_Waterway` is actually a binary variable, we've treated it as a continuous variable with only 0 and 1 as possible values, we will use a histogram(continuous) instead of a barchart(discrete) to visualize the distribution.
+# Response Variable Distribution
+Let's plot a histogram, even though `County_Access_Navigable_Waterway` is actually a categorical binary variable, we've treated it as a continuous variable with only 0 and 1 as possible values, we will use a histogram(continuous) instead of a barchart(discrete) to visualize the distribution.
 ```{r}
 hist(County_Access_Navigable_Waterway, main = "County Access to Navigable Waterway", xlab = "County Access to Navigable Waterway", ylab = "Number of Counties", breaks=25, col = "lightblue", xaxt = "n")
 axis(1, at = c(0, 1), labels = c("No", "Yes"))
 ```
 It seems that about half of the counties do have access to water transportation which would allow for cheaper costs to engage in economic activities. This is a good sign for our model, as we have a good amount of data for both classes of the response variable.
 
+
+# what to do with section below TBD. Will ask Dr. Pruitt if we may build multiple models using the 3 response variable choices.
+In this paper, we have decided to study the response variable peopleSum, which we have created by summing all of the columns in the data that measure how many people work in each industry in a county. Importantly, this sum is distinct from the total amount of men employed in each county, which are counted by different columns. The amount of men working in each county and the amount of people working in each county is distinct. peopleSum sums across the columns indicating Persons Working in Mining, Agriculture, Commerce, Manufacturing, Ocean Navigation, Inland Navigation and "Proffesions" (laywers, politicians etc.). As such, it represents the total amount of people in the county who were employed in 1840. The response variable is distributed with a strong right skew, with most counties having under 10,000 people working, but a few outliers with more than 20,000 people working.
+
+```{r}
+ggplot(data = bigboy, aes(x=peopleSum)) +
+  geom_histogram() +
+  theme_bw()
+```
 
 # The Predictor Variables
 We have chosen to use the following predictor variables to predict counties' access to navigable waterways:
@@ -237,24 +272,30 @@ axis(1, at = seq(0,1500,300), labels = paste0(seq(0,1500,300)))
 hist(Flour_Barrels_Manufactured, main = "Flour: barrels manufactured", xlab = "Flour: barrels manufactured", ylab = "Number of Counties", col = "lightblue", breaks=150, xlim=c(0, 50000), xaxt='n')
 axis(1, at = seq(0,50000,5000), labels = paste0(seq(0,50000,5000)))
 ```
-# Association between Predictor Variables and Response Variable
-```{r}
-cor(County_Access_Navigable_Waterway, Persons_Employed_Inland_Navigation)
-cor(County_Access_Navigable_Waterway, Manufacturing_Establishments_Fisheries)
-cor(County_Access_Navigable_Waterway, Forest_Products_Tar_Pitch_Terpentine_Resin)
-cor(County_Access_Navigable_Waterway, Flour_Barrels_Manufactured)
-```
-The correlation between the response variable and the predictor variables is weak, with the highest correlation being 0.2. This is not a good sign for our model, as we want to see a strong correlation between the predictor variables and the response variable. This may be because of the distribution of our response, or the simple variability between counties.
-Let's create a correlation matrix for a better visualization.
-```{r}
-cor(modelvariables)
-```
-And graphs.
-```{r}
-pairs(modelvariables)
-```
-The correlation matrix and the scatterplots confirm that there is no strong correlation between the predictor variables and the response variable. Again, this is not a good sign for our model, but this may be because of the distribution of our response, or the simple variability between counties.
 
+
+# TBD about capitalSum and peopleSum as response variables
+The first predictor variable we examine is capitalSum, the total amount of capital invested in the county. It is somewhat moderately correlated with our response variable. Our second predictor variable is the number of weekly newspapers produced in the county (ADB028), which is again moderately correlated with our response variable. This makes intuitive sense, as the number of weekly newspapers might reflect the total population of the town, which would be highly correlated with the amount of people working in the county. Our third predictor variable is the amount of men employed in making carriages in the county (ADE033), which again is moderately correlated with our response variale. Our fourth predictor variable is the amount of men employed in residential contruction in the county(ADE036), which is moderately correlated with our response variable. All of these response variables have only moderate correlations, but they are the strongest individual predictors I have found. This may be because of the distribution of our response, or the simple variability between counties.
+
+```{r}
+modelWork <- lm("peopleSum ~ capitalSum", data = training)
+summary(modelWork)
+
+# modelWork2 was referenced below summary(modelWork2) but undefined
+modelWork2 <- lm("peopleSum ~ capitalSum", data = training)
+
+modelNews <-lm("peopleSum ~ ADB023", data = training)
+summary(modelWork2)
+
+
+
+modelCarriage <-lm("peopleSum ~ ADE033", data = training)
+summary(modelWork2)
+
+modelConstr <-lm("peopleSum ~ ADE036", data = training)
+summary(modelWork2)
+
+```
 
 # The Null Model
 
