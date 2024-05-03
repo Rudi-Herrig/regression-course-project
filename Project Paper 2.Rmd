@@ -25,6 +25,12 @@ knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(out.width = "100%",fig.align='center')
 ```
 
+# Also trying with state data rather than county data
+```{r}
+population <- read_xlsx("USCensus_1840_state.xlsx")
+summary(population)
+```
+
 # what to do with section below TBD. Will ask Dr. Pruitt if we may build multiple models using the 3 response variable choices.
 In this paper, we have decided to study the response variable peopleSum, which we have created by summing all of the columns in the data that measure how many people work in each industry in a county. Importantly, this sum is distinct from the total amount of men employed in each county, which are counted by different columns. The amount of men working in each county and the amount of people working in each county is distinct. peopleSum sums across the columns indicating Persons Working in Mining, Agriculture, Commerce, Manufacturing, Ocean Navigation, Inland Navigation and "Proffesions" (laywers, politicians etc.). As such, it represents the total amount of people in the county who were employed in 1840. The response variable is distributed with a strong right skew, with most counties having under 10,000 people working, but a few outliers with more than 20,000 people working.
 

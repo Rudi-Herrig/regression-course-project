@@ -25,6 +25,12 @@ knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(out.width = "100%",fig.align='center')
 ```
 
+# Also trying with state data rather than county data
+```{r}
+population <- read_xlsx("USCensus_1840_state.xlsx")
+summary(population)
+```
+
 ```{r}
 # I have split our code into chunks to make it easier to see which code does what
 # I have also commented the code to make it easier to understand
