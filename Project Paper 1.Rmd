@@ -115,7 +115,7 @@ We initially had trouble configuring our data and model to predict the response 
 ## ACX001 - County Borders Navigable Waterway
 Let us build a logistic regression model to predict the presence of (or access to) navigable waterways in a county. We will use the following predictor variables: ADD006 - "Persons employed in inland navigation", ADC014 - "Manufacturing Establishments: Fisheries", ADB004 - "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", and ADB013 - "Flour: barrels manufactured". We will use the glm function, binomial family, and ACX001~ADD006+ADC014+ADB004+ADB013+ADE011 formula to build a multiple logistic regression model. As seen above, we have split our data into training and testing sets, for testing our model's performance.
 
-```{r}
+```{r, fig.path="figures/"}
 County_Access_Navigable_Waterway <- bigboynav$ACX001
 Persons_Employed_Inland_Navigation <- bigboynav$ADD006
 Manufacturing_Establishments_Fisheries <- bigboynav$ADC014
@@ -136,7 +136,7 @@ ggsave("ADD006.png", plot=ADD006)
 ```
 
 
-```{r}
+```{r, fig.path="figures/"}
 ADC014 <- ggplot(bigboynav, aes(x=Manufacturing_Establishments_Fisheries, y=County_Access_Navigable_Waterway)) +
   geom_point() +
   geom_jitter(height=0.05,size=2,alpha=0.2) +
@@ -150,7 +150,7 @@ ggsave("ADC014.png", plot=ADC014)
 ```
 
 
-```{r}
+```{r, fig.path="figures/"}
 ADB004 <- ggplot(bigboynav, aes(x=Forest_Products_Tar_Pitch_Terpentine_Resin, y=County_Access_Navigable_Waterway)) +
   geom_point() +
   geom_jitter(height=0.05,size=2,alpha=0.2) +
@@ -162,8 +162,12 @@ ADB004
 ggsave("ADB004.png", plot=ADB004)
 ```
 
-
-```{r}
+```{r, include=FALSE}
+if (!dir.exists("figures")) {
+  dir.create("figures")
+}
+```
+```{r, fig.path="figures/"}
 ADB013 <- ggplot(bigboynav, aes(x=Flour_Barrels_Manufactured, y=County_Access_Navigable_Waterway)) +
   geom_point() +
   geom_jitter(height=0.05,size=2,alpha=0.2) +
@@ -193,8 +197,10 @@ The model trained on the training set has similar results as the one above, but 
 # Response Variable Distributions
 Let's plot a histogram, even though `County_Access_Navigable_Waterway` is actually a binary variable, we've treated it as a continuous variable with only 0 and 1 as possible values, we will use a histogram(continuous) instead of a barchart(discrete) to visualize the distribution.
 ```{r}
+png("ACX001hist.png")
 hist(County_Access_Navigable_Waterway, main = "County Access to Navigable Waterway", xlab = "County Access to Navigable Waterway", ylab = "Number of Counties", breaks=25, col = "lightblue", xaxt = "n")
 axis(1, at = c(0, 1), labels = c("No", "Yes"))
+dev.off()
 ```
 It seems that about half of the counties do have access to water transportation which would allow for cheaper costs to engage in economic activities. This is a good sign for our model, as we have a good amount of data for both classes of the response variable.
 
@@ -204,39 +210,71 @@ We have chosen to use the following predictor variables to predict counties' acc
 Let's graph the distributions of these predictor variables to see how they are distributed. We expect to see more skewness in the distributions, unlike the symmetry in the distribution of our response variable ACX001. The data points that skew would be outliers or counties with very high or very low predictor variable values that are not representative of the typical US county circa 1840. We will also look at the correlation between the predictor variables and the response variable to see if there is a relationship between the two. We will use the corrr package to visualize the correlation matrix of the predictor variables and the response variable.
 
 ### ADD006 - Persons Employed in Inland Navigation
-
 ```{r}
-hist(Persons_Employed_Inland_Navigation, main = "Persons Employed in Inland Navigation", xlab = "Persons Employed in Inland Navigation", ylab = "Number of Counties", col = "lightblue")
+summary(Persons_Employed_Inland_Navigation)
+which.max(Persons_Employed_Inland_Navigation)
+second <- bigboynav[-900,]
+which.max(second$ADD006)
+bigboynav[713,]
 ```
+```{r}
+png("ADD006hist.png")
+hist(Persons_Employed_Inland_Navigation, main = "Persons Employed in Inland Navigation", xlab = "Persons Employed in Inland Navigation", ylab = "Number of Counties", col = "lightblue")
+dev.off()
+```
+The extreme outliers belong to Hamilton, Ohio, and St Louis, Missouri. These are major cities and are not representative of the typical US county.
 
 ### ADC014 - Manufacturing Establishments: Fisheries
 ```{r}
+max(Manufacturing_Establishments_Fisheries)
+```
+With $5980800 invested in fisheries, this is an extreme outlier. This is Bristol, Massachusetts, a major city and not representative of the typical US county.
+
+```{r}
+png("ADC014hist.png")
 hist(Manufacturing_Establishments_Fisheries, main = "Manufacturing Establishments: Fisheries", xlab = "Manufacturing Establishments: Fisheries (Capital invested in Millions of $USD)", ylab = "Number of Counties", col = "lightblue", xaxt = "n", breaks=60)
 axis(1, at = breaks, labels = paste0(breaks/1e6, "M"))
+dev.off()
 ```
+
 ```{r}
+png("ADC014hist2.png")
 hist(Manufacturing_Establishments_Fisheries, main = "Manufacturing Establishments: Fisheries", xlab = "Manufacturing Establishments: Fisheries (Capital invested in $USD (not millions))", ylab = "Number of Counties", col = "lightblue", breaks=15000, xlim=c(0, 3000), xaxt='n')
 axis(1, at = seq(0,3000,100), labels = paste0(seq(0,3000,100)))
+dev.off()
 ```
 Even when zoomed in to just (0,3000) on the x-axis, the histogram isn't very helpful. There seems to be an extreme outlier.
 
 
 ### ADB004 - Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced
 ```{r}
+png("ADB004hist.png")
 hist(Forest_Products_Tar_Pitch_Terpentine_Resin, main = "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", xlab = "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", ylab = "Number of Counties", col = "lightblue")
+dev.off()
 ```
-Again, there's an extreme outlier. 
+Again, there's an extreme outlier. This time it's New Hanover, North Carolina, a major city and not representative of the typical US county.
 ```{r}
+png("ADB004hist2.png")
 hist(Forest_Products_Tar_Pitch_Terpentine_Resin, main = "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", xlab = "Forest Products: Tar, Pitch, Turpentine and Resin: Barrels Produced", ylab = "Number of Counties", col = "lightblue", breaks=1500, xlim=c(0, 1500), xaxt='n')
 axis(1, at = seq(0,1500,300), labels = paste0(seq(0,1500,300)))
+dev.off()
 ```
-
+This histogram is more helpful in visualizing the non-outlier data.
 
 ### ADB013 - Flour: barrels manufactured
 ```{r}
+png("ADB013hist.png")
 hist(Flour_Barrels_Manufactured, main = "Flour: barrels manufactured", xlab = "Flour: barrels manufactured", ylab = "Number of Counties", col = "lightblue", breaks=150, xlim=c(0, 50000), xaxt='n')
 axis(1, at = seq(0,50000,5000), labels = paste0(seq(0,50000,5000)))
+dev.off()
 ```
+```{r}
+max(Flour_Barrels_Manufactured)
+which.max(Flour_Barrels_Manufactured)
+bigboynav[774,]
+
+```
+
 # Association between Predictor Variables and Response Variable
 ```{r}
 cor(County_Access_Navigable_Waterway, Persons_Employed_Inland_Navigation)
@@ -251,15 +289,20 @@ cor(modelvariables)
 ```
 And graphs.
 ```{r}
+png("predictorsassociation.png")
 pairs(modelvariables)
+dev.off()
 ```
+
 The correlation matrix and the scatterplots confirm that there is no strong correlation between the predictor variables and the response variable. Again, this is not a good sign for our model, but this may be because of the distribution of our response, or the simple variability between counties.
 
+# Distributions of the Predictor Variables
+The distributions of the predictor variables are all right-skewed, with the exception of Manufacturing Establishments: Fisheries, which has an extreme outlier. This is not a good sign for our model, as we want to see more symmetry in the distributions of the predictor variables. This may be because of the simple variability between counties, or the presence of extreme outliers.
 
 # The Null Model
 
 The RMSE of the null model of the training set, the mean, used on the testing set is roughly 4600, meaning that on average the null model is 4600 people of from the correct amount of people working in the county. Considering that many counties are clustered around having roughly 5,000 people working, this is a high RMSE. This makes sense as the mean is pulled high but the right skew of peopleSum.
 
 ```{r}
-testing %>% summarize(rmseNull = sqrt(mean((peopleSum-mean(training$peopleSum))^2)))
+# testing %>% summarize(rmseNull = sqrt(mean((peopleSum-mean(training$peopleSum))^2)))
 ```
