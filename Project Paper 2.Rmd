@@ -1,7 +1,7 @@
 ---
-title: "Project Paper 1"
+title: "Project Paper 2"
 author: "Rudi Herrig and Jordan Kim"
-date: "17 March 2024"
+date: "5 May 2024"
 output:
   pdf_document: default
 ---
