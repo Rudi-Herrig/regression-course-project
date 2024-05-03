@@ -1,0 +1,1970 @@
+<?xml version='1.0' encoding='utf-8' ?>
+
+<!-- build 20241.24.0308.0326                               -->
+<workbook original-version='18.1' source-build='2024.1.1 (20241.24.0308.0326)' source-platform='win' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <document-format-change-manifest>
+    <_.fcp.AnimationOnByDefault.true...AnimationOnByDefault />
+    <MapboxVectorStylesAndLayers />
+    <_.fcp.MarkAnimation.true...MarkAnimation />
+    <_.fcp.ObjectModelEncapsulateLegacy.true...ObjectModelEncapsulateLegacy />
+    <_.fcp.ObjectModelTableType.true...ObjectModelTableType />
+    <_.fcp.SchemaViewerObjectModel.true...SchemaViewerObjectModel />
+    <SheetIdentifierTracking />
+    <SpatialFileLayer />
+    <WindowsPersistSimpleIdentifiers />
+  </document-format-change-manifest>
+  <preferences>
+    <preference name='ui.encoding.shelf.height' value='24' />
+    <preference name='ui.shelf.height' value='26' />
+  </preferences>
+  <_.fcp.AnimationOnByDefault.false...style>
+    <_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule element='animation'>
+      <_.fcp.AnimationOnByDefault.false...format attr='animation-on' value='ao-on' />
+    </_.fcp.AnimationOnByDefault.false..._.fcp.MarkAnimation.true...style-rule>
+  </_.fcp.AnimationOnByDefault.false...style>
+  <datasources>
+    <datasource caption='US_state_1840.shp+ (Multiple Connections)' inline='true' name='federated.07dbzoj19lsh3817qjv7z0exp8mp' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='US_state_1840' name='ogrdirect.0h2qjum10ztss01dfpspp0hkdkuc'>
+            <connection class='ogrdirect' directory='C:/Users/jorda/OneDrive/Desktop/Spring 2024/STAT 3400/Project/nhgis0005_shape' filename='US_state_1840.shp' password='' server='' tablename='' />
+          </named-connection>
+          <named-connection caption='USCensus_1840_state' name='excel-direct.1fhts1s01tbs0s1979xvu0fvsv6x'>
+            <connection class='excel-direct' cleaning='no' compat='no' dataRefreshTime='' filename='C:/Users/jorda/OneDrive/Desktop/Spring 2024/STAT 3400/Project/USCensus_1840_state.xlsx' interpretationMode='0' password='' server='' validate='no' />
+          </named-connection>
+        </named-connections>
+        <_.fcp.ObjectModelEncapsulateLegacy.false...relation connection='ogrdirect.0h2qjum10ztss01dfpspp0hkdkuc' name='US_state_1840.shp' table='[US_state_1840.shp]' type='table'>
+          <columns>
+            <column datatype='string' name='NHGISST' ordinal='0' />
+            <column datatype='string' name='ICPSRST' ordinal='1' />
+            <column datatype='string' name='STATENAM' ordinal='2' />
+            <column datatype='string' name='GISJOIN' ordinal='3' />
+            <column datatype='string' name='GISJOIN2' ordinal='4' />
+            <column datatype='real' name='SHAPE_AREA' ordinal='5' />
+            <column datatype='real' name='SHAPE_LEN' ordinal='6' />
+            <column datatype='spatial' name='Geometry' ordinal='7' />
+          </columns>
+        </_.fcp.ObjectModelEncapsulateLegacy.false...relation>
+        <_.fcp.ObjectModelEncapsulateLegacy.true...relation type='collection'>
+          <relation connection='ogrdirect.0h2qjum10ztss01dfpspp0hkdkuc' name='US_state_1840.shp' table='[US_state_1840.shp]' type='table'>
+            <columns>
+              <column datatype='string' name='NHGISST' ordinal='0' />
+              <column datatype='string' name='ICPSRST' ordinal='1' />
+              <column datatype='string' name='STATENAM' ordinal='2' />
+              <column datatype='string' name='GISJOIN' ordinal='3' />
+              <column datatype='string' name='GISJOIN2' ordinal='4' />
+              <column datatype='real' name='SHAPE_AREA' ordinal='5' />
+              <column datatype='real' name='SHAPE_LEN' ordinal='6' />
+              <column datatype='spatial' name='Geometry' ordinal='7' />
+            </columns>
+          </relation>
+          <relation connection='excel-direct.1fhts1s01tbs0s1979xvu0fvsv6x' name='nhgis0005_ds7_1840_state' table='[nhgis0005_ds7_1840_state$]' type='table'>
+            <columns gridOrigin='A1:BH32:no:A1:BH32:0' header='yes' outcome='2'>
+              <column datatype='string' name='GISJOIN' ordinal='0' />
+              <column datatype='integer' name='YEAR' ordinal='1' />
+              <column datatype='string' name='STATE' ordinal='2' />
+              <column datatype='integer' name='STATEA' ordinal='3' />
+              <column datatype='string' name='COUNTYA' ordinal='4' />
+              <column datatype='string' name='AREANAME' ordinal='5' />
+              <column datatype='integer' name='STATEICP' ordinal='6' />
+              <column datatype='integer' name='COUNTYICP' ordinal='7' />
+              <column datatype='integer' name='ACD001' ordinal='8' />
+              <column datatype='integer' name='ACN001' ordinal='9' />
+              <column datatype='integer' name='ACY' ordinal='10' />
+              <column datatype='integer' name='ACZ' ordinal='11' />
+              <column datatype='integer' name='ACK001' ordinal='12' />
+              <column datatype='integer' name='AC1001' ordinal='13' />
+              <column datatype='integer' name='AC1002' ordinal='14' />
+              <column datatype='integer' name='AC1003' ordinal='15' />
+              <column datatype='integer' name='AC1004' ordinal='16' />
+              <column datatype='integer' name='AC1005' ordinal='17' />
+              <column datatype='integer' name='AC1006' ordinal='18' />
+              <column datatype='integer' name='AC1007' ordinal='19' />
+              <column datatype='integer' name='AC3001' ordinal='20' />
+              <column datatype='integer' name='AC3002' ordinal='21' />
+              <column datatype='integer' name='AC3003' ordinal='22' />
+              <column datatype='integer' name='ACE001' ordinal='23' />
+              <column datatype='integer' name='ACE002' ordinal='24' />
+              <column datatype='integer' name='ACF001' ordinal='25' />
+              <column datatype='integer' name='ACF002' ordinal='26' />
+              <column datatype='integer' name='ACF003' ordinal='27' />
+              <column datatype='integer' name='ACF004' ordinal='28' />
+              <column datatype='integer' name='ACG001' ordinal='29' />
+              <column datatype='integer' name='ACH001' ordinal='30' />
+              <column datatype='integer' name='ACH002' ordinal='31' />
+              <column datatype='integer' name='ACH003' ordinal='32' />
+              <column datatype='integer' name='ACI001' ordinal='33' />
+              <column datatype='integer' name='ACI002' ordinal='34' />
+              <column datatype='integer' name='ACI003' ordinal='35' />
+              <column datatype='integer' name='ACJ001' ordinal='36' />
+              <column datatype='integer' name='ACL001' ordinal='37' />
+              <column datatype='integer' name='ACL002' ordinal='38' />
+              <column datatype='integer' name='ACM001' ordinal='39' />
+              <column datatype='integer' name='ACM002' ordinal='40' />
+              <column datatype='integer' name='ACM003' ordinal='41' />
+              <column datatype='integer' name='ACM004' ordinal='42' />
+              <column datatype='integer' name='ACO001' ordinal='43' />
+              <column datatype='integer' name='ACP001' ordinal='44' />
+              <column datatype='integer' name='ACQ001' ordinal='45' />
+              <column datatype='integer' name='ACR001' ordinal='46' />
+              <column datatype='integer' name='ACR002' ordinal='47' />
+              <column datatype='integer' name='ACS001' ordinal='48' />
+              <column datatype='integer' name='ACS002' ordinal='49' />
+              <column datatype='integer' name='ACS003' ordinal='50' />
+              <column datatype='integer' name='ACT001' ordinal='51' />
+              <column datatype='integer' name='ACT002' ordinal='52' />
+              <column datatype='integer' name='ACU001' ordinal='53' />
+              <column datatype='integer' name='ACU002' ordinal='54' />
+              <column datatype='integer' name='ACU003' ordinal='55' />
+              <column datatype='integer' name='ACU004' ordinal='56' />
+              <column datatype='integer' name='ACV001' ordinal='57' />
+              <column datatype='integer' name='ACV002' ordinal='58' />
+              <column datatype='string' name='ACX001' ordinal='59' />
+            </columns>
+          </relation>
+        </_.fcp.ObjectModelEncapsulateLegacy.true...relation>
+        <cols>
+          <map key='[AC1001]' value='[nhgis0005_ds7_1840_state].[AC1001]' />
+          <map key='[AC1002]' value='[nhgis0005_ds7_1840_state].[AC1002]' />
+          <map key='[AC1003]' value='[nhgis0005_ds7_1840_state].[AC1003]' />
+          <map key='[AC1004]' value='[nhgis0005_ds7_1840_state].[AC1004]' />
+          <map key='[AC1005]' value='[nhgis0005_ds7_1840_state].[AC1005]' />
+          <map key='[AC1006]' value='[nhgis0005_ds7_1840_state].[AC1006]' />
+          <map key='[AC1007]' value='[nhgis0005_ds7_1840_state].[AC1007]' />
+          <map key='[AC3001]' value='[nhgis0005_ds7_1840_state].[AC3001]' />
+          <map key='[AC3002]' value='[nhgis0005_ds7_1840_state].[AC3002]' />
+          <map key='[AC3003]' value='[nhgis0005_ds7_1840_state].[AC3003]' />
+          <map key='[ACD001]' value='[nhgis0005_ds7_1840_state].[ACD001]' />
+          <map key='[ACE001]' value='[nhgis0005_ds7_1840_state].[ACE001]' />
+          <map key='[ACE002]' value='[nhgis0005_ds7_1840_state].[ACE002]' />
+          <map key='[ACF001]' value='[nhgis0005_ds7_1840_state].[ACF001]' />
+          <map key='[ACF002]' value='[nhgis0005_ds7_1840_state].[ACF002]' />
+          <map key='[ACF003]' value='[nhgis0005_ds7_1840_state].[ACF003]' />
+          <map key='[ACF004]' value='[nhgis0005_ds7_1840_state].[ACF004]' />
+          <map key='[ACG001]' value='[nhgis0005_ds7_1840_state].[ACG001]' />
+          <map key='[ACH001]' value='[nhgis0005_ds7_1840_state].[ACH001]' />
+          <map key='[ACH002]' value='[nhgis0005_ds7_1840_state].[ACH002]' />
+          <map key='[ACH003]' value='[nhgis0005_ds7_1840_state].[ACH003]' />
+          <map key='[ACI001]' value='[nhgis0005_ds7_1840_state].[ACI001]' />
+          <map key='[ACI002]' value='[nhgis0005_ds7_1840_state].[ACI002]' />
+          <map key='[ACI003]' value='[nhgis0005_ds7_1840_state].[ACI003]' />
+          <map key='[ACJ001]' value='[nhgis0005_ds7_1840_state].[ACJ001]' />
+          <map key='[ACK001]' value='[nhgis0005_ds7_1840_state].[ACK001]' />
+          <map key='[ACL001]' value='[nhgis0005_ds7_1840_state].[ACL001]' />
+          <map key='[ACL002]' value='[nhgis0005_ds7_1840_state].[ACL002]' />
+          <map key='[ACM001]' value='[nhgis0005_ds7_1840_state].[ACM001]' />
+          <map key='[ACM002]' value='[nhgis0005_ds7_1840_state].[ACM002]' />
+          <map key='[ACM003]' value='[nhgis0005_ds7_1840_state].[ACM003]' />
+          <map key='[ACM004]' value='[nhgis0005_ds7_1840_state].[ACM004]' />
+          <map key='[ACN001]' value='[nhgis0005_ds7_1840_state].[ACN001]' />
+          <map key='[ACO001]' value='[nhgis0005_ds7_1840_state].[ACO001]' />
+          <map key='[ACP001]' value='[nhgis0005_ds7_1840_state].[ACP001]' />
+          <map key='[ACQ001]' value='[nhgis0005_ds7_1840_state].[ACQ001]' />
+          <map key='[ACR001]' value='[nhgis0005_ds7_1840_state].[ACR001]' />
+          <map key='[ACR002]' value='[nhgis0005_ds7_1840_state].[ACR002]' />
+          <map key='[ACS001]' value='[nhgis0005_ds7_1840_state].[ACS001]' />
+          <map key='[ACS002]' value='[nhgis0005_ds7_1840_state].[ACS002]' />
+          <map key='[ACS003]' value='[nhgis0005_ds7_1840_state].[ACS003]' />
+          <map key='[ACT001]' value='[nhgis0005_ds7_1840_state].[ACT001]' />
+          <map key='[ACT002]' value='[nhgis0005_ds7_1840_state].[ACT002]' />
+          <map key='[ACU001]' value='[nhgis0005_ds7_1840_state].[ACU001]' />
+          <map key='[ACU002]' value='[nhgis0005_ds7_1840_state].[ACU002]' />
+          <map key='[ACU003]' value='[nhgis0005_ds7_1840_state].[ACU003]' />
+          <map key='[ACU004]' value='[nhgis0005_ds7_1840_state].[ACU004]' />
+          <map key='[ACV001]' value='[nhgis0005_ds7_1840_state].[ACV001]' />
+          <map key='[ACV002]' value='[nhgis0005_ds7_1840_state].[ACV002]' />
+          <map key='[ACX001]' value='[nhgis0005_ds7_1840_state].[ACX001]' />
+          <map key='[ACY]' value='[nhgis0005_ds7_1840_state].[ACY]' />
+          <map key='[ACZ]' value='[nhgis0005_ds7_1840_state].[ACZ]' />
+          <map key='[AREANAME]' value='[nhgis0005_ds7_1840_state].[AREANAME]' />
+          <map key='[COUNTYA]' value='[nhgis0005_ds7_1840_state].[COUNTYA]' />
+          <map key='[COUNTYICP]' value='[nhgis0005_ds7_1840_state].[COUNTYICP]' />
+          <map key='[GISJOIN (nhgis0005!ds7!1840!state)]' value='[nhgis0005_ds7_1840_state].[GISJOIN]' />
+          <map key='[GISJOIN2]' value='[US_state_1840.shp].[GISJOIN2]' />
+          <map key='[GISJOIN]' value='[US_state_1840.shp].[GISJOIN]' />
+          <map key='[Geometry]' value='[US_state_1840.shp].[Geometry]' />
+          <map key='[ICPSRST]' value='[US_state_1840.shp].[ICPSRST]' />
+          <map key='[NHGISST]' value='[US_state_1840.shp].[NHGISST]' />
+          <map key='[SHAPE_AREA]' value='[US_state_1840.shp].[SHAPE_AREA]' />
+          <map key='[SHAPE_LEN]' value='[US_state_1840.shp].[SHAPE_LEN]' />
+          <map key='[STATEA]' value='[nhgis0005_ds7_1840_state].[STATEA]' />
+          <map key='[STATEICP]' value='[nhgis0005_ds7_1840_state].[STATEICP]' />
+          <map key='[STATENAM]' value='[US_state_1840.shp].[STATENAM]' />
+          <map key='[STATE]' value='[nhgis0005_ds7_1840_state].[STATE]' />
+          <map key='[YEAR]' value='[nhgis0005_ds7_1840_state].[YEAR]' />
+        </cols>
+        <metadata-records>
+          <metadata-record class='capability'>
+            <remote-name />
+            <remote-type>0</remote-type>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias />
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='integer' name='context'>0</attribute>
+              <attribute datatype='string' name='gridOrigin'>&quot;A1:BH32:no:A1:BH32:0&quot;</attribute>
+              <attribute datatype='boolean' name='header'>true</attribute>
+              <attribute datatype='integer' name='outcome'>2</attribute>
+            </attributes>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>NHGISST</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[NHGISST]</local-name>
+            <parent-name>[US_state_1840.shp]</parent-name>
+            <remote-alias>NHGISST</remote-alias>
+            <ordinal>0</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='binary' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[US_state_1840.shp_175A35155F0049EBA3C5BEA51C54B2E6]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ICPSRST</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[ICPSRST]</local-name>
+            <parent-name>[US_state_1840.shp]</parent-name>
+            <remote-alias>ICPSRST</remote-alias>
+            <ordinal>1</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='binary' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[US_state_1840.shp_175A35155F0049EBA3C5BEA51C54B2E6]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>STATENAM</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[STATENAM]</local-name>
+            <parent-name>[US_state_1840.shp]</parent-name>
+            <remote-alias>STATENAM</remote-alias>
+            <ordinal>2</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='binary' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[US_state_1840.shp_175A35155F0049EBA3C5BEA51C54B2E6]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>GISJOIN</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[GISJOIN]</local-name>
+            <parent-name>[US_state_1840.shp]</parent-name>
+            <remote-alias>GISJOIN</remote-alias>
+            <ordinal>3</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='binary' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[US_state_1840.shp_175A35155F0049EBA3C5BEA51C54B2E6]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>GISJOIN2</remote-name>
+            <remote-type>129</remote-type>
+            <local-name>[GISJOIN2]</local-name>
+            <parent-name>[US_state_1840.shp]</parent-name>
+            <remote-alias>GISJOIN2</remote-alias>
+            <ordinal>4</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='0' name='binary' />
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[US_state_1840.shp_175A35155F0049EBA3C5BEA51C54B2E6]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>SHAPE_AREA</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[SHAPE_AREA]</local-name>
+            <parent-name>[US_state_1840.shp]</parent-name>
+            <remote-alias>SHAPE_AREA</remote-alias>
+            <ordinal>5</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[US_state_1840.shp_175A35155F0049EBA3C5BEA51C54B2E6]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>SHAPE_LEN</remote-name>
+            <remote-type>5</remote-type>
+            <local-name>[SHAPE_LEN]</local-name>
+            <parent-name>[US_state_1840.shp]</parent-name>
+            <remote-alias>SHAPE_LEN</remote-alias>
+            <ordinal>6</ordinal>
+            <local-type>real</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[US_state_1840.shp_175A35155F0049EBA3C5BEA51C54B2E6]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>Geometry</remote-name>
+            <remote-type>8</remote-type>
+            <local-name>[Geometry]</local-name>
+            <parent-name>[US_state_1840.shp]</parent-name>
+            <remote-alias>Geometry</remote-alias>
+            <ordinal>7</ordinal>
+            <local-type>spatial</local-type>
+            <aggregation>Collect</aggregation>
+            <contains-null>true</contains-null>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[US_state_1840.shp_175A35155F0049EBA3C5BEA51C54B2E6]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>GISJOIN</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[GISJOIN (nhgis0005!ds7!1840!state)]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>GISJOIN</remote-alias>
+            <ordinal>8</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RUS_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>YEAR</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[YEAR]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>YEAR</remote-alias>
+            <ordinal>9</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>STATE</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[STATE]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>STATE</remote-alias>
+            <ordinal>10</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RUS_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>STATEA</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[STATEA]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>STATEA</remote-alias>
+            <ordinal>11</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>COUNTYA</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[COUNTYA]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>COUNTYA</remote-alias>
+            <ordinal>12</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RUS_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>AREANAME</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[AREANAME]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>AREANAME</remote-alias>
+            <ordinal>13</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RUS_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>STATEICP</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[STATEICP]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>STATEICP</remote-alias>
+            <ordinal>14</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>COUNTYICP</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[COUNTYICP]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>COUNTYICP</remote-alias>
+            <ordinal>15</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACD001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACD001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACD001</remote-alias>
+            <ordinal>16</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACN001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACN001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACN001</remote-alias>
+            <ordinal>17</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACY</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACY]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACY</remote-alias>
+            <ordinal>18</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACZ</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACZ]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACZ</remote-alias>
+            <ordinal>19</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACK001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACK001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACK001</remote-alias>
+            <ordinal>20</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>AC1001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[AC1001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>AC1001</remote-alias>
+            <ordinal>21</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>AC1002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[AC1002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>AC1002</remote-alias>
+            <ordinal>22</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>AC1003</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[AC1003]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>AC1003</remote-alias>
+            <ordinal>23</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>AC1004</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[AC1004]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>AC1004</remote-alias>
+            <ordinal>24</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>AC1005</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[AC1005]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>AC1005</remote-alias>
+            <ordinal>25</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>AC1006</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[AC1006]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>AC1006</remote-alias>
+            <ordinal>26</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>AC1007</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[AC1007]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>AC1007</remote-alias>
+            <ordinal>27</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>AC3001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[AC3001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>AC3001</remote-alias>
+            <ordinal>28</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>AC3002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[AC3002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>AC3002</remote-alias>
+            <ordinal>29</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>AC3003</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[AC3003]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>AC3003</remote-alias>
+            <ordinal>30</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACE001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACE001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACE001</remote-alias>
+            <ordinal>31</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACE002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACE002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACE002</remote-alias>
+            <ordinal>32</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACF001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACF001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACF001</remote-alias>
+            <ordinal>33</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACF002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACF002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACF002</remote-alias>
+            <ordinal>34</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACF003</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACF003]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACF003</remote-alias>
+            <ordinal>35</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACF004</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACF004]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACF004</remote-alias>
+            <ordinal>36</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACG001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACG001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACG001</remote-alias>
+            <ordinal>37</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACH001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACH001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACH001</remote-alias>
+            <ordinal>38</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACH002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACH002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACH002</remote-alias>
+            <ordinal>39</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACH003</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACH003]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACH003</remote-alias>
+            <ordinal>40</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACI001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACI001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACI001</remote-alias>
+            <ordinal>41</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACI002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACI002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACI002</remote-alias>
+            <ordinal>42</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACI003</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACI003]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACI003</remote-alias>
+            <ordinal>43</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACJ001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACJ001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACJ001</remote-alias>
+            <ordinal>44</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACL001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACL001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACL001</remote-alias>
+            <ordinal>45</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACL002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACL002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACL002</remote-alias>
+            <ordinal>46</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACM001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACM001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACM001</remote-alias>
+            <ordinal>47</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACM002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACM002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACM002</remote-alias>
+            <ordinal>48</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACM003</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACM003]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACM003</remote-alias>
+            <ordinal>49</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACM004</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACM004]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACM004</remote-alias>
+            <ordinal>50</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACO001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACO001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACO001</remote-alias>
+            <ordinal>51</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACP001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACP001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACP001</remote-alias>
+            <ordinal>52</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACQ001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACQ001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACQ001</remote-alias>
+            <ordinal>53</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACR001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACR001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACR001</remote-alias>
+            <ordinal>54</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACR002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACR002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACR002</remote-alias>
+            <ordinal>55</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACS001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACS001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACS001</remote-alias>
+            <ordinal>56</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACS002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACS002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACS002</remote-alias>
+            <ordinal>57</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACS003</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACS003]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACS003</remote-alias>
+            <ordinal>58</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACT001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACT001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACT001</remote-alias>
+            <ordinal>59</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACT002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACT002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACT002</remote-alias>
+            <ordinal>60</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACU001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACU001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACU001</remote-alias>
+            <ordinal>61</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACU002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACU002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACU002</remote-alias>
+            <ordinal>62</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACU003</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACU003]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACU003</remote-alias>
+            <ordinal>63</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACU004</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACU004]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACU004</remote-alias>
+            <ordinal>64</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACV001</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACV001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACV001</remote-alias>
+            <ordinal>65</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACV002</remote-name>
+            <remote-type>20</remote-type>
+            <local-name>[ACV002]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACV002</remote-alias>
+            <ordinal>66</ordinal>
+            <local-type>integer</local-type>
+            <aggregation>Sum</aggregation>
+            <contains-null>true</contains-null>
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;I8&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+          <metadata-record class='column'>
+            <remote-name>ACX001</remote-name>
+            <remote-type>130</remote-type>
+            <local-name>[ACX001]</local-name>
+            <parent-name>[nhgis0005_ds7_1840_state]</parent-name>
+            <remote-alias>ACX001</remote-alias>
+            <ordinal>67</ordinal>
+            <local-type>string</local-type>
+            <aggregation>Count</aggregation>
+            <contains-null>true</contains-null>
+            <collation flag='1' name='LEN_RUS_S2' />
+            <attributes>
+              <attribute datatype='string' name='DebugRemoteType'>&quot;WSTR&quot;</attribute>
+            </attributes>
+            <_.fcp.ObjectModelEncapsulateLegacy.true...object-id>[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]</_.fcp.ObjectModelEncapsulateLegacy.true...object-id>
+          </metadata-record>
+        </metadata-records>
+      </connection>
+      <aliases enabled='yes' />
+      <column caption='Ac1001' datatype='integer' name='[AC1001]' role='measure' type='quantitative' />
+      <column caption='Ac1002' datatype='integer' name='[AC1002]' role='measure' type='quantitative' />
+      <column caption='Ac1003' datatype='integer' name='[AC1003]' role='measure' type='quantitative' />
+      <column caption='Ac1004' datatype='integer' name='[AC1004]' role='measure' type='quantitative' />
+      <column caption='Ac1005' datatype='integer' name='[AC1005]' role='measure' type='quantitative' />
+      <column caption='Ac1006' datatype='integer' name='[AC1006]' role='measure' type='quantitative' />
+      <column caption='Ac1007' datatype='integer' name='[AC1007]' role='measure' type='quantitative' />
+      <column caption='Ac3001' datatype='integer' name='[AC3001]' role='measure' type='quantitative' />
+      <column caption='Ac3002' datatype='integer' name='[AC3002]' role='measure' type='quantitative' />
+      <column caption='Ac3003' datatype='integer' name='[AC3003]' role='measure' type='quantitative' />
+      <column caption='Acd001' datatype='integer' name='[ACD001]' role='measure' type='quantitative' />
+      <column caption='Ace001' datatype='integer' name='[ACE001]' role='measure' type='quantitative' />
+      <column caption='Ace002' datatype='integer' name='[ACE002]' role='measure' type='quantitative' />
+      <column caption='Acf001' datatype='integer' name='[ACF001]' role='measure' type='quantitative' />
+      <column caption='Acf002' datatype='integer' name='[ACF002]' role='measure' type='quantitative' />
+      <column caption='Acf003' datatype='integer' name='[ACF003]' role='measure' type='quantitative' />
+      <column caption='Acf004' datatype='integer' name='[ACF004]' role='measure' type='quantitative' />
+      <column caption='Acg001' datatype='integer' name='[ACG001]' role='measure' type='quantitative' />
+      <column caption='Ach001' datatype='integer' name='[ACH001]' role='measure' type='quantitative' />
+      <column caption='Ach002' datatype='integer' name='[ACH002]' role='measure' type='quantitative' />
+      <column caption='Ach003' datatype='integer' name='[ACH003]' role='measure' type='quantitative' />
+      <column caption='Aci001' datatype='integer' name='[ACI001]' role='measure' type='quantitative' />
+      <column caption='Aci002' datatype='integer' name='[ACI002]' role='measure' type='quantitative' />
+      <column caption='Aci003' datatype='integer' name='[ACI003]' role='measure' type='quantitative' />
+      <column caption='Acj001' datatype='integer' name='[ACJ001]' role='measure' type='quantitative' />
+      <column caption='Ack001' datatype='integer' name='[ACK001]' role='measure' type='quantitative' />
+      <column caption='Acl001' datatype='integer' name='[ACL001]' role='measure' type='quantitative' />
+      <column caption='Acl002' datatype='integer' name='[ACL002]' role='measure' type='quantitative' />
+      <column caption='Acm001' datatype='integer' name='[ACM001]' role='measure' type='quantitative' />
+      <column caption='Acm002' datatype='integer' name='[ACM002]' role='measure' type='quantitative' />
+      <column caption='Acm003' datatype='integer' name='[ACM003]' role='measure' type='quantitative' />
+      <column caption='Acm004' datatype='integer' name='[ACM004]' role='measure' type='quantitative' />
+      <column caption='Acn001' datatype='integer' name='[ACN001]' role='measure' type='quantitative' />
+      <column caption='Aco001' datatype='integer' name='[ACO001]' role='measure' type='quantitative' />
+      <column caption='Acp001' datatype='integer' name='[ACP001]' role='measure' type='quantitative' />
+      <column caption='Acq001' datatype='integer' name='[ACQ001]' role='measure' type='quantitative' />
+      <column caption='Acr001' datatype='integer' name='[ACR001]' role='measure' type='quantitative' />
+      <column caption='Acr002' datatype='integer' name='[ACR002]' role='measure' type='quantitative' />
+      <column caption='Acs001' datatype='integer' name='[ACS001]' role='measure' type='quantitative' />
+      <column caption='Acs002' datatype='integer' name='[ACS002]' role='measure' type='quantitative' />
+      <column caption='Acs003' datatype='integer' name='[ACS003]' role='measure' type='quantitative' />
+      <column caption='Act001' datatype='integer' name='[ACT001]' role='measure' type='quantitative' />
+      <column caption='Act002' datatype='integer' name='[ACT002]' role='measure' type='quantitative' />
+      <column caption='Acu001' datatype='integer' name='[ACU001]' role='measure' type='quantitative' />
+      <column caption='Acu002' datatype='integer' name='[ACU002]' role='measure' type='quantitative' />
+      <column caption='Acu003' datatype='integer' name='[ACU003]' role='measure' type='quantitative' />
+      <column caption='Acu004' datatype='integer' name='[ACU004]' role='measure' type='quantitative' />
+      <column caption='Acv001' datatype='integer' name='[ACV001]' role='measure' type='quantitative' />
+      <column caption='Acv002' datatype='integer' name='[ACV002]' role='measure' type='quantitative' />
+      <column caption='Acx001' datatype='string' name='[ACX001]' role='dimension' type='nominal' />
+      <column caption='Areaname' datatype='string' name='[AREANAME]' role='dimension' type='nominal' />
+      <column caption='Countya' datatype='string' name='[COUNTYA]' role='dimension' semantic-role='[County].[Name]' type='nominal' />
+      <column caption='Countyicp' datatype='integer' name='[COUNTYICP]' role='measure' type='quantitative' />
+      <column caption='Illiteracy Rate' datatype='real' name='[Calculation_508906772034555904]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[ACK001]/[ACY]' />
+      </column>
+      <column datatype='string' name='[GISJOIN (nhgis0005!ds7!1840!state)]' role='dimension' semantic-role='[State].[Name]' type='nominal' />
+      <column caption='Gisjoin2' datatype='string' name='[GISJOIN2]' role='dimension' type='nominal' />
+      <column caption='Gisjoin' datatype='string' name='[GISJOIN]' role='dimension' type='nominal' />
+      <column caption='Icpsrst' datatype='string' name='[ICPSRST]' role='dimension' type='nominal' />
+      <column caption='Nhgisst' datatype='string' name='[NHGISST]' role='dimension' type='nominal' />
+      <column caption='Shape Area' datatype='real' name='[SHAPE_AREA]' role='measure' type='quantitative' />
+      <column caption='Shape Len' datatype='real' name='[SHAPE_LEN]' role='measure' type='quantitative' />
+      <column caption='Statea' datatype='integer' name='[STATEA]' role='measure' type='quantitative' />
+      <column caption='Stateicp' datatype='integer' name='[STATEICP]' role='measure' type='quantitative' />
+      <column caption='Statenam' datatype='string' name='[STATENAM]' role='dimension' type='nominal' />
+      <column caption='State' datatype='string' name='[STATE]' role='dimension' semantic-role='[State].[Name]' type='nominal' />
+      <column caption='Year' datatype='integer' name='[YEAR]' role='dimension' type='quantitative' />
+      <_.fcp.ObjectModelTableType.true...column caption='US_state_1840.shp' datatype='table' name='[__tableau_internal_object_id__].[US_state_1840.shp_175A35155F0049EBA3C5BEA51C54B2E6]' role='measure' type='quantitative' />
+      <_.fcp.ObjectModelTableType.true...column caption='nhgis0005_ds7_1840_state' datatype='table' name='[__tableau_internal_object_id__].[nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516]' role='measure' type='quantitative' />
+      <layout _.fcp.SchemaViewerObjectModel.false...dim-percentage='0.5' _.fcp.SchemaViewerObjectModel.false...measure-percentage='0.4' _.fcp.SchemaViewerObjectModel.true...common-percentage='1' _.fcp.SchemaViewerObjectModel.true...user-set-layout-v2='true' dim-ordering='alphabetic' measure-ordering='alphabetic' show-structure='true' />
+      <semantic-values>
+        <semantic-value key='[Country].[Name]' value='&quot;United States&quot;' />
+      </semantic-values>
+      <_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+        <objects>
+          <object caption='US_state_1840.shp' id='US_state_1840.shp_175A35155F0049EBA3C5BEA51C54B2E6'>
+            <properties context=''>
+              <relation connection='ogrdirect.0h2qjum10ztss01dfpspp0hkdkuc' name='US_state_1840.shp' table='[US_state_1840.shp]' type='table'>
+                <columns>
+                  <column datatype='string' name='NHGISST' ordinal='0' />
+                  <column datatype='string' name='ICPSRST' ordinal='1' />
+                  <column datatype='string' name='STATENAM' ordinal='2' />
+                  <column datatype='string' name='GISJOIN' ordinal='3' />
+                  <column datatype='string' name='GISJOIN2' ordinal='4' />
+                  <column datatype='real' name='SHAPE_AREA' ordinal='5' />
+                  <column datatype='real' name='SHAPE_LEN' ordinal='6' />
+                  <column datatype='spatial' name='Geometry' ordinal='7' />
+                </columns>
+              </relation>
+            </properties>
+          </object>
+          <object caption='nhgis0005_ds7_1840_state' id='nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516'>
+            <properties context=''>
+              <relation connection='excel-direct.1fhts1s01tbs0s1979xvu0fvsv6x' name='nhgis0005_ds7_1840_state' table='[nhgis0005_ds7_1840_state$]' type='table'>
+                <columns gridOrigin='A1:BH32:no:A1:BH32:0' header='yes' outcome='2'>
+                  <column datatype='string' name='GISJOIN' ordinal='0' />
+                  <column datatype='integer' name='YEAR' ordinal='1' />
+                  <column datatype='string' name='STATE' ordinal='2' />
+                  <column datatype='integer' name='STATEA' ordinal='3' />
+                  <column datatype='string' name='COUNTYA' ordinal='4' />
+                  <column datatype='string' name='AREANAME' ordinal='5' />
+                  <column datatype='integer' name='STATEICP' ordinal='6' />
+                  <column datatype='integer' name='COUNTYICP' ordinal='7' />
+                  <column datatype='integer' name='ACD001' ordinal='8' />
+                  <column datatype='integer' name='ACN001' ordinal='9' />
+                  <column datatype='integer' name='ACY' ordinal='10' />
+                  <column datatype='integer' name='ACZ' ordinal='11' />
+                  <column datatype='integer' name='ACK001' ordinal='12' />
+                  <column datatype='integer' name='AC1001' ordinal='13' />
+                  <column datatype='integer' name='AC1002' ordinal='14' />
+                  <column datatype='integer' name='AC1003' ordinal='15' />
+                  <column datatype='integer' name='AC1004' ordinal='16' />
+                  <column datatype='integer' name='AC1005' ordinal='17' />
+                  <column datatype='integer' name='AC1006' ordinal='18' />
+                  <column datatype='integer' name='AC1007' ordinal='19' />
+                  <column datatype='integer' name='AC3001' ordinal='20' />
+                  <column datatype='integer' name='AC3002' ordinal='21' />
+                  <column datatype='integer' name='AC3003' ordinal='22' />
+                  <column datatype='integer' name='ACE001' ordinal='23' />
+                  <column datatype='integer' name='ACE002' ordinal='24' />
+                  <column datatype='integer' name='ACF001' ordinal='25' />
+                  <column datatype='integer' name='ACF002' ordinal='26' />
+                  <column datatype='integer' name='ACF003' ordinal='27' />
+                  <column datatype='integer' name='ACF004' ordinal='28' />
+                  <column datatype='integer' name='ACG001' ordinal='29' />
+                  <column datatype='integer' name='ACH001' ordinal='30' />
+                  <column datatype='integer' name='ACH002' ordinal='31' />
+                  <column datatype='integer' name='ACH003' ordinal='32' />
+                  <column datatype='integer' name='ACI001' ordinal='33' />
+                  <column datatype='integer' name='ACI002' ordinal='34' />
+                  <column datatype='integer' name='ACI003' ordinal='35' />
+                  <column datatype='integer' name='ACJ001' ordinal='36' />
+                  <column datatype='integer' name='ACL001' ordinal='37' />
+                  <column datatype='integer' name='ACL002' ordinal='38' />
+                  <column datatype='integer' name='ACM001' ordinal='39' />
+                  <column datatype='integer' name='ACM002' ordinal='40' />
+                  <column datatype='integer' name='ACM003' ordinal='41' />
+                  <column datatype='integer' name='ACM004' ordinal='42' />
+                  <column datatype='integer' name='ACO001' ordinal='43' />
+                  <column datatype='integer' name='ACP001' ordinal='44' />
+                  <column datatype='integer' name='ACQ001' ordinal='45' />
+                  <column datatype='integer' name='ACR001' ordinal='46' />
+                  <column datatype='integer' name='ACR002' ordinal='47' />
+                  <column datatype='integer' name='ACS001' ordinal='48' />
+                  <column datatype='integer' name='ACS002' ordinal='49' />
+                  <column datatype='integer' name='ACS003' ordinal='50' />
+                  <column datatype='integer' name='ACT001' ordinal='51' />
+                  <column datatype='integer' name='ACT002' ordinal='52' />
+                  <column datatype='integer' name='ACU001' ordinal='53' />
+                  <column datatype='integer' name='ACU002' ordinal='54' />
+                  <column datatype='integer' name='ACU003' ordinal='55' />
+                  <column datatype='integer' name='ACU004' ordinal='56' />
+                  <column datatype='integer' name='ACV001' ordinal='57' />
+                  <column datatype='integer' name='ACV002' ordinal='58' />
+                  <column datatype='string' name='ACX001' ordinal='59' />
+                </columns>
+              </relation>
+            </properties>
+          </object>
+        </objects>
+        <relationships>
+          <relationship>
+            <expression op='='>
+              <expression op='[GISJOIN]' />
+              <expression op='[GISJOIN (nhgis0005!ds7!1840!state)]' />
+            </expression>
+            <first-end-point object-id='US_state_1840.shp_175A35155F0049EBA3C5BEA51C54B2E6' />
+            <second-end-point object-id='nhgis0005!ds7!1840!state_355DC3FAD1954169BA96D7517A5BF516' />
+          </relationship>
+        </relationships>
+      </_.fcp.ObjectModelEncapsulateLegacy.true...object-graph>
+    </datasource>
+  </datasources>
+  <mapsources>
+    <mapsource name='Tableau' />
+  </mapsources>
+  <worksheets>
+    <worksheet name='Illiteracy Rates by State_1840'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='US_state_1840.shp+ (Multiple Connections)' name='federated.07dbzoj19lsh3817qjv7z0exp8mp' />
+          </datasources>
+          <mapsources>
+            <mapsource name='Tableau' />
+          </mapsources>
+          <datasource-dependencies datasource='federated.07dbzoj19lsh3817qjv7z0exp8mp'>
+            <column caption='Ack001' datatype='integer' name='[ACK001]' role='measure' type='quantitative' />
+            <column datatype='integer' name='[ACY]' role='measure' type='quantitative' />
+            <column caption='Illiteracy Rate' datatype='real' name='[Calculation_508906772034555904]' role='measure' type='quantitative'>
+              <calculation class='tableau' formula='[ACK001]/[ACY]' />
+            </column>
+            <column datatype='spatial' name='[Geometry]' role='measure' type='nominal' />
+            <column caption='Statenam' datatype='string' name='[STATENAM]' role='dimension' type='nominal' />
+            <column-instance column='[Calculation_508906772034555904]' derivation='Avg' name='[avg:Calculation_508906772034555904:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[Geometry]' derivation='Collect' name='[clct:Geometry:nk]' pivot='key' type='nominal' />
+            <column-instance column='[STATENAM]' derivation='None' name='[none:STATENAM:nk]' pivot='key' type='nominal' />
+            <column-instance column='[Calculation_508906772034555904]' derivation='Sum' name='[sum:Calculation_508906772034555904:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <style>
+          <style-rule element='cell'>
+            <format attr='text-align' field='[federated.07dbzoj19lsh3817qjv7z0exp8mp].[none:STATENAM:nk]' value='auto' />
+            <format attr='text-format' field='[federated.07dbzoj19lsh3817qjv7z0exp8mp].[avg:Calculation_508906772034555904:qk]' value='p0.00%' />
+          </style-rule>
+          <style-rule element='mark'>
+            <encoding attr='color' field='[federated.07dbzoj19lsh3817qjv7z0exp8mp].[sum:Calculation_508906772034555904:qk]' palette='tableau-map-temperatur' type='interpolated' />
+          </style-rule>
+          <style-rule element='map'>
+            <format attr='washout' value='0.0' />
+          </style-rule>
+        </style>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[federated.07dbzoj19lsh3817qjv7z0exp8mp].[sum:Calculation_508906772034555904:qk]' />
+              <text column='[federated.07dbzoj19lsh3817qjv7z0exp8mp].[none:STATENAM:nk]' />
+              <text column='[federated.07dbzoj19lsh3817qjv7z0exp8mp].[avg:Calculation_508906772034555904:qk]' />
+              <lod column='[federated.07dbzoj19lsh3817qjv7z0exp8mp].[clct:Geometry:nk]' />
+              <geometry column='[federated.07dbzoj19lsh3817qjv7z0exp8mp].[clct:Geometry:nk]' />
+            </encodings>
+            <style>
+              <style-rule element='mark'>
+                <format attr='mark-labels-show' value='true' />
+                <format attr='mark-labels-cull' value='true' />
+              </style-rule>
+            </style>
+          </pane>
+        </panes>
+        <rows>[federated.07dbzoj19lsh3817qjv7z0exp8mp].[Latitude (generated)]</rows>
+        <cols>[federated.07dbzoj19lsh3817qjv7z0exp8mp].[Longitude (generated)]</cols>
+      </table>
+      <simple-id uuid='{F136CA61-DA56-4B36-B6EC-0F449465B61D}' />
+    </worksheet>
+    <worksheet name='Sheet 2'>
+      <table>
+        <view>
+          <datasources />
+          <aggregation value='true' />
+        </view>
+        <style />
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <view>
+              <breakdown value='auto' />
+            </view>
+            <mark class='Automatic' />
+          </pane>
+        </panes>
+        <rows />
+        <cols />
+      </table>
+      <simple-id uuid='{A5D614BC-D120-40A5-BA75-52166124645C}' />
+    </worksheet>
+  </worksheets>
+  <windows source-height='30'>
+    <window class='worksheet' maximized='true' name='Illiteracy Rates by State_1840'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+        <edge name='right'>
+          <strip size='160'>
+            <card pane-specification-id='0' param='[federated.07dbzoj19lsh3817qjv7z0exp8mp].[sum:Calculation_508906772034555904:qk]' type='color' />
+          </strip>
+        </edge>
+      </cards>
+      <viewpoint>
+        <highlight>
+          <color-one-way>
+            <field>[federated.07dbzoj19lsh3817qjv7z0exp8mp].[none:STATENAM:nk]</field>
+          </color-one-way>
+        </highlight>
+      </viewpoint>
+      <simple-id uuid='{8D4640B5-CAFE-4C80-BE1D-25832BA8A3F6}' />
+    </window>
+    <window class='worksheet' name='Sheet 2'>
+      <cards>
+        <edge name='left'>
+          <strip size='160'>
+            <card type='pages' />
+            <card type='filters' />
+            <card type='marks' />
+          </strip>
+        </edge>
+        <edge name='top'>
+          <strip size='2147483647'>
+            <card type='columns' />
+          </strip>
+          <strip size='2147483647'>
+            <card type='rows' />
+          </strip>
+          <strip size='31'>
+            <card type='title' />
+          </strip>
+        </edge>
+      </cards>
+      <simple-id uuid='{DDBD5EF0-EEB2-4379-A950-FAA008A55094}' />
+    </window>
+  </windows>
+  <thumbnails>
+    <thumbnail height='192' name='Illiteracy Rates by State_1840' width='192'>
+      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
+      r+9shTCuAAAAAElFTkSuQmCC
+    </thumbnail>
+    <thumbnail height='192' name='Sheet 2' width='192'>
+      iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAAA7DAAAOwwHHb6hk
+      AAACFUlEQVR4nO3TMQEAIAzAMMC/5yFjRxMFfXpnZg5Eve0A2GQA0gxAmgFIMwBpBiDNAKQZ
+      gDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFI
+      MwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQD
+      kGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBp
+      BiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA
+      0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDN
+      AKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxA
+      mgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZ
+      gDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFI
+      MwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKQZgDQDkGYA0gxAmgFIMwBpBiDNAKR9Y+0F
+      fBUOM1sAAAAASUVORK5CYII=
+    </thumbnail>
+  </thumbnails>
+</workbook>
