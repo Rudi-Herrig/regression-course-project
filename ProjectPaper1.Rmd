@@ -201,8 +201,25 @@ ggsave("Confederate.png", plot=Confederate)
 # I wanted to write the cleaned up data frame into a file.
 # install.packages("openxlsx")
 library(openxlsx)
-write.xlsx(WhiteIlliterate, "WhiteIlliterate.xlsx")
-write.xlsx(popdata_list, "popdata.xlsx")
+
+# Create a new workbook
+wb <- createWorkbook()
+# Add sheets to the workbook
+addWorksheet(wb, "Data")
+addWorksheet(wb, "Headers")
+# Write data to the respective sheets
+writeData(wb, sheet = "Data", WhiteIlliteracy)
+writeData(wb, sheet = "Headers", WhiteIlliteracyHead)
+# Save the workbook
+saveWorkbook(wb, "WhiteIlliterate.xlsx", overwrite = TRUE)
+
+# Repeat the process for the other list
+wb_popdata <- createWorkbook()
+addWorksheet(wb_popdata, "Data")
+addWorksheet(wb_popdata, "Headers")
+writeData(wb_popdata, sheet = "Data", popdata_list$Data)
+writeData(wb_popdata, sheet = "Headers", popdata_list$Headers)
+saveWorkbook(wb_popdata, "popdata.xlsx", overwrite = TRUE)
 ```
 
 # Splitting Data into Training and Testing Sets
