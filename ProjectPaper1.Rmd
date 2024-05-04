@@ -253,7 +253,9 @@ ACE+ACS+ACSW+ACSNW+ACSP+ACSWP+Confederate formula to build a multiple linear reg
 ```{r}
 model <- glm(ACKY~STATE+ACD001+ACN001+ACK001+ACY+ACZYZ+ACH+ACI+ACL+ACM+AC1+ACE+ACS+ACSW+ACSNW+ACSP+ACSWP+Confederate+ACD001:Confederate+ACN001:Confederate+ACK001:Confederate+ACY:Confederate+ACZYZ:Confederate+ACH:Confederate+ACI:Confederate+ACL:Confederate+ACM:Confederate+AC1:Confederate+ACE:Confederate+ACS:Confederate+ACSW:Confederate+ACSNW:Confederate+ACSP:Confederate+ACSWP:Confederate, data = train, family = "binomial")
 summary(model)
+saveRDS(model, "model.rds")
 ```
+
 The only significant predictor variable is the interaction between the percentage of white population and the Confederate variable. This is not a good sign for our model, as we want to see more significant predictor variables. This may be because of the distribution of our response, or the simple variability between counties.
 
 # Association between Predictor Variables and Response Variable
