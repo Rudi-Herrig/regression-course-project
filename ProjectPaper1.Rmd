@@ -29,20 +29,94 @@ I wanted to try creating a binary response variable indicating whether a county 
 
 ```{r}
 # 1280 rows
+# ADB - production of industries
+# ADE - Men employed in selected industries
+production <- read_xlsx("USCensus_1840_county.xlsx")
+# to check for data structure, `summary(production)` is used
+
+# 1280 rows
+# ACX - County Borders Navigable waterway, 1 if yes
+navig <- read_xlsx("USCensusData1840.xlsx")
+# There was an extra row in `navig` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
+navig <- navig[-101,]
+
+# 1280 rows
+# ADC - Capital Invested
+# ADD - Persons Employed
+capital <- read_xlsx("USCensusData1840_2.xlsx")
+
+# 1280 rows
+# ACK001 - 
+literacy <- read_xlsx("USCensus1840Literacy.xlsx")
+# Just like `navig`, there was an extra row in `literacy` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
+literacy <- literacy[-101,]
+```
+
+```{r}
+# bigboy is all the data sets combined
+bigboy <- production %>% inner_join(navig) %>% inner_join(capital) %>% inner_join(literacy)
+
+# bignav is to try to salvage the navigable waterway variable as the response
+bignav <- navig %>%  inner_join(capital) %>% inner_join(production)
+
+# 1280 rows
 # Population data
 population <- read_xlsx("USCensus_1840_counties.xlsx")
 
 population <- population[-101,] # removing Alexandria row
 
-population_head <- population %>% slice_head() # separating header row to further clean up the data set
+# Adding the industry, manufacturing, and navigable waterway data to the population data
+# 1280 rows
+# ADB - production of industries
+# ADE - Men employed in selected industries
+production <- read_xlsx("USCensus_1840_county.xlsx")
+# to check for data structure, `summary(production)` is used
 
-popdata <- population[-1,] # removing header row
+# 1280 rows
+# ACX - County Borders Navigable waterway, 1 if yes
+navig <- read_xlsx("USCensusData1840.xlsx")
+# There was an extra row in `navig` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
+navig <- navig[-101,]
+
+# 1280 rows
+# ADC - Capital Invested
+# ADD - Persons Employed
+capital <- read_xlsx("USCensusData1840_2.xlsx")
+
+# 1280 rows
+# ACK001 - 
+literacy <- read_xlsx("USCensus1840Literacy.xlsx")
+# Just like `navig`, there was an extra row in `literacy` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
+literacy <- literacy[-101,]
+```
+
+```{r}
+# bigboy is all the data sets combined
+bigboy <- production %>% inner_join(navig) %>% inner_join(capital) %>% inner_join(literacy)
+
+# bignav is to try to salvage the navigable waterway variable as the response
+bignav <- navig %>%  inner_join(capital) %>% inner_join(production)
+
+# bigpop is all our data aggregated
+bigpop <- population %>% inner_join(bignav)
+```
+
+```{r}
+# separating header row to further clean up the data set
+bigpophead <- bigpop %>% slice_head()
+
+# removing header row
+bigpopdata <- bigpop[-1,]
 
 # Converting our data from chr to dbl with as.numeric()
-popdata[,10:ncol(popdata)] <- as.data.frame(apply(popdata[,10:ncol(popdata)], 2, function(x) (as.numeric(x))))
+bigpopdata[,10:ncol(bigpopdata)] <- as.data.frame(apply(bigpopdata[,10:ncol(bigpopdata)], 2, function(x) (as.numeric(x))))
+
+# population_head <- population %>% slice_head() # separating header row to further clean up the data set
+# popdata <- population[-1,] # removing header row
+
 
 # Creating new variables
-popdata <- popdata %>%
+bigpopdata <- bigpopdata %>%
   mutate(STATE=as.factor(STATE),
          COUNTY=as.factor(COUNTY),
          ACZYZ=ACZ/(ACY+ACZ), # ACZYZ is the Percentage of Colored population
@@ -60,7 +134,7 @@ popdata <- popdata %>%
          ACSWP=ACSW/ACS, # ACSWP is the percentage of white population
          Confederate=as.integer(STATE %in% c("Alabama", "Arkansas", "Florida", "Georgia", "Louisiana", "Mississippi", "North Carolina", "South Carolina", "Tennessee", "Texas", "Virginia")))
 
-popdata_head <- population_head %>%
+bigpopdatahead <- bigpophead %>%
   mutate(ACD001="Total Population",
          ACN001="Total Urban Population",
          ACZYZ="Percentage of Colored Population",
@@ -78,26 +152,32 @@ popdata_head <- population_head %>%
          ACSWP="Percentage of White Population",
          Confederate="Joined Confederacy and Raised Arms Against The United States = 1")
 
-popdata <- popdata %>%
- na.omit() # removing rows with NA values
+# bigpopdata <- bigpopdata %>%
+#  na.omit() # removing rows with NA values
 
 # Re-adding the header row with new descriptions - but this converted the whole list into 'chr' NO!!!!
 # Create a list to keep them together but separate for statistical analyses
-popdata_list <- list(Headers = popdata_head, Data = popdata)
+bigpopdata_list <- list(Headers = bigpopdatahead, Data = bigpopdata)
 
 # glimpse(popdata_list)
 ```
 
 Filtering for only the columns we're interested in and creating a new list `WhiteIlliterate`
 ```{r}
-WhiteIlliteracy <- popdata_list$Data  %>%
-  select(GISJOIN, STATE, STATEA, STATEICP, COUNTY, COUNTYA, COUNTYICP, ACD001, ACN001,  ACK001, ACY, ACKY, ACZYZ, ACH, ACI, ACL, ACM, AC1, ACE, ACS, ACSW, ACSNW, ACSP, ACSWP, Confederate)
+# WhiteIlliteracy <- popdata_list$Data  %>%
+#   select(GISJOIN, STATE, STATEA, STATEICP, COUNTY, COUNTYA, COUNTYICP, ACD001, ACN001,  ACK001, ACY, ACKY, ACZYZ, ACH, ACI, ACL, ACM, AC1, ACE, ACS, ACSW, ACSNW, ACSP, ACSWP, Confederate)
 # glimpse(WhiteIlliteracy)
-WhiteIlliteracyHead <- popdata_list$Headers %>%
-  select(GISJOIN, STATE, STATEA, STATEICP, COUNTY, COUNTYA, COUNTYICP, ACD001, ACN001,  ACK001, ACY, ACKY, ACZYZ, ACH, ACI, ACL, ACM, AC1, ACE, ACS, ACSW, ACSNW, ACSP, ACSWP, Confederate)
+# WhiteIlliteracyHead <- popdata_list$Headers %>%
+#   select(GISJOIN, STATE, STATEA, STATEICP, COUNTY, COUNTYA, COUNTYICP, ACD001, ACN001,  ACK001, ACY, ACKY, ACZYZ, ACH, ACI, ACL, ACM, AC1, ACE, ACS, ACSW, ACSNW, ACSP, ACSWP, Confederate)
 # glimpse(WhiteIlliteracyHead)
-WhiteIlliterate <- list(Headers = WhiteIlliteracyHead, Data = WhiteIlliteracy)
+# WhiteIlliterate <- list(Headers = WhiteIlliteracyHead, Data = WhiteIlliteracy)
 # glimpse(WhiteIlliterate)
+WhiteIlliteracy <- bigpopdata %>%
+  select(-c(1:2,4,6:9)) # removing unnecessary columns
+WhiteIlliteracyHead <- bigpopdatahead %>%
+  select(-c(1:2,4,6:9)) # removing unnecessary columns
+WhiteIlliterate <- list(Headers = WhiteIlliteracyHead, Data = WhiteIlliteracy)
+str(WhiteIlliteracy)
 ```
 
 ```{r, include=FALSE}
@@ -244,6 +324,22 @@ We'll have a null model using the training set data, which is the mean of the re
 
 We will also utilize various techniques to try to find the best model, from shrinkage, dimension reduction, model selection and variable selection. We will also look at the distributions of the predictor variables and the correlation between the predictor variables and the response variable.
 
+# Forward Stepwise Variable Selection
+```{r message=TRUE, warning=TRUE}
+#load libraries
+library(olsrr)
+
+#define the model
+model <- glm(ACK001~.,data=WhiteIlliteracy, family = "gaussian")
+
+#execute forward stepwise
+forward_model <- ols_step_forward_adj_r2(model)
+
+#review selection steps
+forward_model$metrics
+```
+
+
 # The Predictor Variables
 We have chosen to use the following predictor variables to predict white illiteracy in counties: STATE - "The State (as factors)", ACD001 - "Total Population", ACN001 - "Total Urban Population", ACK001 - "Total White Persons Over 20 Who Cannot Read or Write", ACY - "Total White Persons Over 20", ACZYZ - "Percentage of Colored Population", ACH - "Total Learning Institutions", ACI - "Total Number of Students", ACL - "Number of Printing and Binding Services", ACM - "Number of Newspapers and Periodicals", AC1 - "Total Employed in Learned Professions", ACE - "White Deaf, Dumb, and Blind Persons Over 20", ACS - "Total Persons", ACSW - "Total White Persons", ACSNW - "Total Non-White Persons", ACSP - "Percentage of Non-White Population", ACSWP - "Percentage of White Population", and Confederate - "Joined Confederacy and Raised Arms Against The United States = 1". We will use the glm function, Gaussian family, and ACKY~STATE+ACD001+ACN001+ACK001+ACY+ACZYZ+ACH+ACI+ACL+ACM+AC1+
 ACE+ACS+ACSW+ACSNW+ACSP+ACSWP+Confederate formula to build a multiple linear regression model. As seen above, we have split our data into training and testing sets, for testing our model's performance. We will also look at the distributions of the predictor variables and the correlation between the predictor variables and the response variable using the `corrr` package.
@@ -323,16 +419,16 @@ corrplot(cormat, method = "color", type = "upper",
 dev.off()
 ```
 
-```{r}
-png("cormat_hclust.png", width = 1200, height = 1200)
-cormat <- cor(modelvariables)
-# Generate the correlation plot
-corrplot(cormat, method = "color", type = "upper", order = "hclust",
-         tl.col = "black", tl.srt = 45, 
-         addCoef.col = "black", # Add correlation coefficients
-         col = colorRampPalette(c("#E46726", "white", "#6D9EC1"))(200)) # Custom color palette
-dev.off()
-```
+# ```{r}
+# png("cormat_hclust.png", width = 1200, height = 1200)
+# cormat <- cor(modelvariables)
+# # Generate the correlation plot
+# corrplot(cormat, method = "color", type = "upper", order = "hclust",
+#          tl.col = "black", tl.srt = 45, 
+#          addCoef.col = "black", # Add correlation coefficients
+#          col = colorRampPalette(c("#E46726", "white", "#6D9EC1"))(200)) # Custom color palette
+# dev.off()
+# ```
 
 ```{r}
 png("colorcorplot.png", width = 1200, height = 1200, res=144)
