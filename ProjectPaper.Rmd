@@ -1,5 +1,5 @@
 ---
-title: "Project Paper 1 - Revised"
+title: "(Project Paper 1 - Revised +) Project Paper 2"
 author: "Rudi Herrig and Jordan Kim"
 date: "5 May 2024"
 output:
@@ -28,82 +28,37 @@ knitr::opts_chunk$set(out.width = "60%",fig.align='center')
 I wanted to try creating a binary response variable indicating whether a county joined the South because the state in which it is located fought against the Union. I will use the following states: Alabama, Arkansas, Florida, Georgia, Louisiana, Mississippi, North Carolina, South Carolina, Tennessee, Texas, and Virginia. I will create a new variable, Confederate, which is equal to 1 if the county is in one of these states, and 0 if the county is not in one of these states. I will use the mutate function to create this new variable.
 
 ```{r}
-# 1280 rows
-# ADB - production of industries
-# ADE - Men employed in selected industries
-production <- read_xlsx("USCensus_1840_county.xlsx")
-# to check for data structure, `summary(production)` is used
-
-# 1280 rows
-# ACX - County Borders Navigable waterway, 1 if yes
-navig <- read_xlsx("USCensusData1840.xlsx")
-# There was an extra row in `navig` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
-navig <- navig[-101,]
-
-# 1280 rows
-# ADC - Capital Invested
-# ADD - Persons Employed
-capital <- read_xlsx("USCensusData1840_2.xlsx")
-
-# 1280 rows
-# ACK001 - 
-literacy <- read_xlsx("USCensus1840Literacy.xlsx")
-# Just like `navig`, there was an extra row in `literacy` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
-literacy <- literacy[-101,]
-```
-
-```{r}
-# bigboy is all the data sets combined
-# bigboy <- production %>% inner_join(navig) %>% inner_join(capital) %>% inner_join(literacy)
-
-# bignav is to try to salvage the navigable waterway variable as the response
-# bignav <- navig %>%  inner_join(capital) %>% inner_join(production)
-
-# 1280 rows
+# 1279 rows
 # Population data
 population <- read_xlsx("USCensus_1840_counties.xlsx")
-
-population <- population[-101,] # removing Alexandria row
+population <- population %>%
+  dplyr::select(-COUNTYA,-COUNTYICP,-AREANAME) # removing COUNTY and COUNTYA columns, which, when used as a factor, would create too many levels
+population <- population[-c(101,103),] # removing Alexandria and Rural Alexandria County rows
 
 # Adding the industry, manufacturing, and navigable waterway data to the population data
-# 1280 rows
+# 1279 rows
 # ADB - production of industries
 # ADE - Men employed in selected industries
 production <- read_xlsx("USCensus_1840_county.xlsx")
-# to check for data structure, `summary(production)` is used
+production <- production %>%
+  dplyr::select(-COUNTYA,-COUNTYICP,-AREANAME) # removing COUNTY and COUNTYA columns, which, when used as a factor, would create too many levels
+production <- production[-102,] # removing Rural Alexandria County row
 
-# 1280 rows
-# ACX - County Borders Navigable waterway, 1 if yes
-navig <- read_xlsx("USCensusData1840.xlsx")
-# There was an extra row in `navig` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
-navig <- navig[-101,]
-
-# 1280 rows
-# ADC - Capital Invested
-# ADD - Persons Employed
-capital <- read_xlsx("USCensusData1840_2.xlsx")
-
-# 1280 rows
-# ACK001 - 
-literacy <- read_xlsx("USCensus1840Literacy.xlsx")
-# Just like `navig`, there was an extra row in `literacy` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
-literacy <- literacy[-101,]
+agriculture <- read_xlsx("USCensus_1840_agriculture.xlsx")
+agriculture <- agriculture %>%
+  dplyr::select(-COUNTYA,-COUNTYICP,-AREANAME) # removing COUNTY and COUNTYA columns, which, when used as a factor, would create too many levels
+agriculture <- agriculture[-101,] # removing Alexandria County row
 ```
 
 ```{r}
 # Specify the columns you want to join on explicitly
-join_columns <- c("GISJOIN", "YEAR", "STATE", "STATEA", "COUNTY", "COUNTYA", "AREANAME", "STATEICP", "COUNTYICP")
-
-# bigboy is all the data sets combined
-# bigboy <- production %>% inner_join(navig) %>% inner_join(capital) %>% inner_join(literacy)
-
-# bignav is to try to salvage the navigable waterway variable as the response
-# bignav <- navig %>%  inner_join(capital) %>% inner_join(production)
+join_columns <- c("GISJOIN", "YEAR", "STATE", "STATEA", "STATEICP", "COUNTY")
 
 # bigpop is all our data aggregated
 bigpop <- population %>%
   inner_join(production, by = join_columns) %>%
-  inner_join(capital, by = join_columns)
+  inner_join(agriculture, by = join_columns)
+#   inner_join(capital, by = join_columns)
 ```
 
 ```{r}
@@ -114,7 +69,12 @@ bigpophead <- bigpop %>% slice_head()
 bigpopdata <- bigpop[-1,]
 
 # Converting our data from chr to dbl with as.numeric()
-bigpopdata[,10:ncol(bigpopdata)] <- as.data.frame(apply(bigpopdata[,10:ncol(bigpopdata)], 2, function(x) (as.numeric(x))))
+bigpop[,7:ncol(bigpop)] <- as.data.frame(apply(bigpop[,7:ncol(bigpop)], 2, function(x) (as.numeric(x))))
+bigpopdata[,7:ncol(bigpopdata)] <- as.data.frame(apply(bigpopdata[,7:ncol(bigpopdata)], 2, function(x) (as.numeric(x))))
+
+# Replace all NA values with 0 in the bigpop data frame
+bigpop[is.na(bigpop)] <- 0
+bigpopdata[is.na(bigpopdata)] <- 0
 
 # population_head <- population %>% slice_head() # separating header row to further clean up the data set
 # popdata <- population[-1,] # removing header row
@@ -123,7 +83,6 @@ bigpopdata[,10:ncol(bigpopdata)] <- as.data.frame(apply(bigpopdata[,10:ncol(bigp
 # Creating new variables
 bigpopdata <- bigpopdata %>%
   mutate(STATE=as.factor(STATE),
-         COUNTY=as.factor(COUNTY),
          ACZYZ=ACZ/(ACY+ACZ), # ACZYZ is the Percentage of Colored population
          ACKY=ACK001/ACY, # ACKY is the Percentage of White Illiteracy
          ACH=ACH001+ACH002+ACH003, # ACH is the total number of Learning Institutions
@@ -132,7 +91,34 @@ bigpopdata <- bigpopdata %>%
          ACM=ACM001+ACM002+ACM003+ACM004, # ACM is Number of Newspapers and Periodicals
          AC1=AC1003+AC1004+AC1005+AC1006+AC1007, # AC1 is the total number of Employed persons in Learned Professions Requiring Literacy
          ACE=AC3003+ACE001, # ACE is the number of White Deaf, Dumb, and Blind Persons Over 20
+         AC3=AC3001+AC3002+AC3003, # AC3 is the Total White Persons Who are Deaf, Dumb, or Blind
+         AC9M = AC9001 + AC9002 + AC9003 + AC9026, # Total Number of Mining Establishments
+         AC9C = AC9004 + AC9005 + AC9006 + AC9007, # Total Number of Commerce Establishments
+         AC9MF = AC9008 + AC9009 + AC9010 + AC9011 + AC9012 + AC9013 + AC9014 + AC9015 + AC9016 + AC9017 + AC9018 + AC9019 + AC9020 + AC9021 + AC9022 + AC9023 + AC9024 + AC9025 + AC9027 + AC9028 + AC9029 + AC9030, # Total Number of Manufacturing Establishments
          ACS=ACS001+ACS002+ACS003, # ACS is Total Persons
+         ADAF = ADA004 + ADA005 + ADA006, # Total Produced Value of Forest Products
+         ADAMF = ADA007 + ADA008 + ADA009 + ADA010 + ADA011 + ADA012 + ADA013 + ADA014 + ADA015 + ADA016 + ADA017 + ADA018 + ADA019 + ADA020 + ADA021 + ADA022 + ADA023 + ADA024 + ADA025 + ADA026 + ADA027 + ADA028 + ADA029 + ADA030 + ADA031 + ADA032 + ADA033 + ADA034 + ADA035 + ADA036 + ADA040 + ADA041, # Total Produced Value of Manufacturing Products
+         ADAM = ADA037 + ADA038 + ADA039, # Total Produced Value of Mining Products
+         ADCM = ADC001 + ADC002 + ADC003 + ADC004 + ADC005 + ADC006 + ADC007 + ADC008, # Capital invested in Mining Establishments
+         ADCC = ADC009 + ADC010 + ADC011 + ADC012 + ADC013, # Capital invested in Commerce Establishments
+         ADCMFF = ADC014, # Capital invested in Manufacturing Establishments: Fisheries
+         ADCMFM = ADC015, # Capital invested in Manufacturing Establishments: Machinery
+         ADCMFT = ADC016 + ADC017 + ADC018 + ADC019 + ADC020, # Capital invested in Manufacturing Establishments: Textiles
+         ADCMFTH = ADC021 + ADC022, # Capital invested in Manufacturing Establishments: Tobacco and Hats
+         ADCMFL = ADC023 + ADC024, # Capital invested in Manufacturing Establishments: Leather
+         ADCMFSCL = ADC025 + ADC026, # Capital invested in Manufacturing Establishments: Soap, Candles, and Liquors
+         ADCMFC = ADC027 + ADC028, # Capital invested in Manufacturing Establishments: Chemicals
+         ADCMFGE = ADC029 + ADC030, # Capital invested in Manufacturing Establishments: Glass and Earthenware
+         ADCMFFP = ADC031, # Capital invested in Manufacturing Establishments: Food Processing
+         ADCMFPP = ADC032 + ADC033, # Capital invested in Manufacturing Establishments: Paper and Printing
+         ADCMFO = ADC034 + ADC035 + ADC036 + ADC037 + ADC038 + ADC039, # Capital invested in Manufacturing Establishments: Other
+         ADEM = ADE001 + ADE002 + ADE003 + ADE004 + ADE005 + ADE006 + ADE007 + ADE008, # Men employed by Mining Establishments
+         ADEC = ADE010 + ADE011 + ADE012,  # Men employed by Commerce Establishments
+         ADEMF = ADE014 + ADE015 + ADE016 + ADE017 + ADE018 + ADE019 + ADE020 + ADE021 + ADE022 + ADE023 + ADE024 + ADE025 + ADE026 + ADE027 + ADE028 + ADE029 + ADE030 + ADE031 + ADE032 + ADE033 + ADE034 + ADE035 + ADE036, # Men employed by Manufacturing Establishments
+         AC5 = AC5001 + AC5002 + AC5003 + AC5004 + AC5005 + AC5006 + AC5007 + AC5008 + AC5009, # Persons Employed Textile and Leather Manufacturing Establishments
+         AB2 = AB2001 + AB2002 + AB2003 + AB2004, # Total Livestock Animals
+         AB5 = AB5001 + AB5002 + AB5003 + AB5004 + AB5005, # Total Value of Non-Field-Crop Products
+         AB8 = AB8001 + AB8002 + AB8003 + AB8004 + AB8005 + AB8006 + AB8007 + AB8008 + AB8009 + AB8010 + AB8011 + AB8012 + AB8013 + AB8014 + AB8015 + AB8016 + AB8017 + AB8018 + AB8019 + AB8020 + AB8021 + AB8022, # Total Estimated Value of Farm Productions
          ACSW= ACS001, # ACSW is Total White Persons
          ACSNW= ACS002+ACS003, # ACSNW is Total Non-White Persons
          ACSP=ACSNW/ACS, # ACSP is the percentage of non-white population
@@ -150,6 +136,33 @@ bigpopdatahead <- bigpophead %>%
          ACM="Number of Newspapers and Periodicals",
          AC1="Total Employed in Learned Professions",
          ACE="White Deaf, Dumb, and Blind Persons Over 20",
+         AC3="Total White Persons Who are Deaf, Dumb, or Blind",
+         AC9M = "Total Number of Mining Establishments",
+         AC9C = "Total Number of Commerce Establishments",
+         AC9MF = "Total Number of Manufacturing Establishments",
+         ADAF = "Total Produced Value of Forest Products",
+         ADAMF = "Total Produced Value of Manufacturing Products",
+         ADAM = "Total Produced Value of Mining Products",
+         ADCM = "Capital invested in Mining Establishments",
+         ADCC = "Capital invested in Commerce Establishments",
+         ADCMFF = "Capital invested in Manufacturing Establishments: Fisheries",
+         ADCMFM = "Capital invested in Manufacturing Establishments: Machinery",
+         ADCMFT = "Capital invested in Manufacturing Establishments: Textiles",
+         ADCMFTH = "Capital invested in Manufacturing Establishments: Tobacco and Hats",
+         ADCMFL = "Capital invested in Manufacturing Establishments: Leather",
+         ADCMFSCL = "Capital invested in Manufacturing Establishments: Soap, Candles, and Liquors",
+         ADCMFC = "Capital invested in Manufacturing Establishments: Chemicals",
+         ADCMFGE = "Capital invested in Manufacturing Establishments: Glass and Earthenware",
+         ADCMFFP = "Capital invested in Manufacturing Establishments: Food Processing",
+         ADCMFPP = "Capital invested in Manufacturing Establishments: Paper and Printing",
+         ADCMFO = "Capital invested in Manufacturing Establishments: Other",
+         ADEM = "Men employed by Mining Establishments",
+         ADEC = "Men employed by Commerce Establishments",
+         ADEMF = "Men employed by Manufacturing Establishments",
+         AC5 = "Persons Employed Textile and Leather Manufacturing Establishments",
+         AB2 = "Total Livestock Animals",
+         AB5 = "Total Value of Non-Field-Crop Products",
+         AB8 = "Total Estimated Value of Farm Productions",
          ACS="Total Persons",
          ACSW="Total White Persons",
          ACSNW="Total Non-White Persons",
@@ -157,8 +170,6 @@ bigpopdatahead <- bigpophead %>%
          ACSWP="Percentage of White Population",
          Confederate="Joined Confederacy and Raised Arms Against The United States = 1")
 
-bigpopdata <- bigpopdata %>%
-  na.omit() # removing rows with NA values
 
 # Re-adding the header row with new descriptions - but this converted the whole list into 'chr' NO!!!!
 # Create a list to keep them together but separate for statistical analyses
@@ -178,9 +189,9 @@ Filtering for only the columns we're interested in and creating a new list `Whit
 # WhiteIlliterate <- list(Headers = WhiteIlliteracyHead, Data = WhiteIlliteracy)
 # glimpse(WhiteIlliterate)
 WhiteIlliteracy <- bigpopdata %>%
-  dplyr::select(-c(1:2,4,6:9)) # removing unnecessary columns
+  dplyr::select(-c(1:2,4)) # removing unnecessary columns
 WhiteIlliteracyHead <- bigpopdatahead %>%
-  dplyr::select(-c(1:2,4,6:9)) # removing unnecessary columns
+  dplyr::select(-c(1:2,4)) # removing unnecessary columns
 WhiteIlliterate <- list(Headers = WhiteIlliteracyHead, Data = WhiteIlliteracy)
 ```
 
@@ -324,10 +335,15 @@ trows <- sample(x=nrow(WhiteIlliterate$Data),size=floor(0.75*nrow(WhiteIlliterat
 #separate data
 train <- WhiteIlliterate$Data[trows,]
 train <- train %>%
-  dplyr::select(-COUNTY)
+  dplyr::select(-ACK001)
 test <- WhiteIlliterate$Data[-trows,]
 test <- test %>%
-  dplyr::select(-COUNTY)
+  dplyr::select(-ACK001)
+traindata <- train[4:ncol(train)]
+testdata <- test[4:ncol(train)]
+alldata <- WhiteIlliteracy[4:ncol(train)]
+alldata <- alldata %>%
+  dplyr::select(-ACK001)
 ```
 
 
@@ -338,7 +354,7 @@ library(olsrr)
 # Load the MASS package
 library(MASS)
 #define the ols model
-model <- glm(ACKY~.-COUNTY,data=WhiteIlliteracy, family = "gaussian")
+model <- glm(ACKY~.-STATE-STATEICP-COUNTY,data=train, family = "gaussian")
 
 # Perform forward stepwise model selection using stepAIC
 stepwise_model <- stepAIC(model, direction = "forward", trace = 1)
@@ -355,26 +371,27 @@ significant_coefficients <- coefficients_table[coefficients_table[, "Pr(>|t|)"] 
 # Print significant coefficients
 print(significant_coefficients)
 ```
-Forward Stepwise Selection using OLS led to `STATE(factors)` and `ACK001`, `ACF002`, `ADB002`, and `ACZYZ` as predictor variables. We will use these variables to build a multiple linear regression model.
+Forward Stepwise Selection using OLS led to just `AB2002` and `AB4017` as predictor variables. We will use these variables to build a multiple linear regression model.
+
 ```{r}
 # building multiple linear regression model using training dataset
-forwardmodel <- glm(ACKY~STATE+ACK001+ACF002+ADB002+ACZYZ, data = train, family = "gaussian")
+forwardmodel <- glm(ACKY~AB2002 + AB4017, data = train, family = "gaussian")
 predictions <- predict(forwardmodel, newdata = test, type="response")
 RMSE_forward <- sqrt(mean((test$ACKY - predictions)^2))
 RMSE_forward
 ```
-### And our Forward Stepwise selection method using AIC as criteria gave us a model using `STATE`, `ACK001`, `ACF002`, `ADB002`, and `ACZYZ` as predictor variables, with a testing RMSE of $0.102337$.
+### And our Forward Stepwise selection method using AIC as criteria gave us a model using `AB2002` and `AB4017` as predictor variables, with a testing RMSE of $0.1361309$.
 
 
 # Ridge and Lasso Regression (plus OLS glm)
 ```{r}
 #define X matrices
-x_train <- model.matrix(ACKY~.,data=train)[,-1]
-x_test <- model.matrix(ACKY~.,data=test)[,-1]
+x_train <- model.matrix(ACKY~.,data=traindata)[,-1]
+x_test <- model.matrix(ACKY~.,data=testdata)[,-1]
 
 #define y vector
-y_train <- train$ACKY
-y_test <- test$ACKY
+y_train <- traindata$ACKY
+y_test <- testdata$ACKY
 ```
 
 ```{r}
@@ -398,7 +415,7 @@ lambda_best
 
 ```{r}
 #fit models
-model_ols <- glm(ACKY~.,data=train,family="gaussian")
+model_ols <- glm(ACKY~.,data=traindata,family="gaussian")
 model_ridge <- glmnet(x=x_train,y=y_train,family="gaussian", standardize=TRUE, alpha=0)
 model_lasso <- glmnet(x=x_train,y=y_train,family="gaussian",standardize=TRUE,alpha=1)
 
@@ -419,25 +436,22 @@ RMSE_ols
 RMSE_ridge=sqrt(mean((test$ACKY-test_pred_ridge)^2))
 RMSE_ridge
 ```
-Our glm model using Ordinary Least Squares model yielded RMSE of $0.9049026$.
-Our model using Ridge Regression model yielded RMSE of $0.1075233$.
-Our best model was using Lasso Regression model with testing RMSE of $0.1014527$.
+Our glm model using Ordinary Least Squares model yielded RMSE of $0.7520277$.
+Our model using Ridge Regression model yielded RMSE of $0.1524679$.
+Our best model was using Lasso Regression model with testing RMSE of $0.1248152$.
 
 # building full lasso model using all data
 ```{r}
-best_WhiteIlliteracy <- WhiteIlliteracy %>%
-  dplyr::select(-COUNTY)
-
 #convert all sample data to matrix form
-x_all <- model.matrix(ACKY~.,data=best_WhiteIlliteracy)[,-1]
-y_all <- best_WhiteIlliteracy$ACKY
+x_all <- model.matrix(ACKY~.,data=alldata)[,-1]
+y_all <- alldata$ACKY
 
 #fit lasso model using all sample data
 model_best <- glmnet(x=x_all,y=y_all,family="gaussian",standardize=TRUE,alpha=1)
 
 #view coefficients for best model
 coefficients <- predict(model_best,type="coefficients",s=lambda_best)
-
+# rownames(coefficients)[-1]
 # Convert the sparse matrix to a regular numeric vector
 coefficients_vector <- as.vector(coefficients)
 coefficients_vector[length(coefficients_vector)]
@@ -453,41 +467,44 @@ non_zero_coefficients <- named_coefficients[named_coefficients != 0]
 # Print the names of the variables with non-zero coefficients
 non_zero_coefficients[-1] # exclude the intercept
 
-names(non_zero_coefficients[2:10])
+names(non_zero_coefficients[2:15])
 ```
-For ACKY as the response variable and also using STATE factors as part of the predictive model, we get 
-STATES: "STATEArkansas"   "STATEIowa Territory"    "STATEKentucky"       "STATEMichigan"       "STATEMissouri"    "STATENew York"       "STATENorth Carolina" "STATEOhio"           "STATEPennsylvania" as 'predictor variable factors(?)'.
+For ACKY as the response variable and only using the numerical data in the predictive model, but using all data, we get the following predictor variables with non-zero coefficients: "ACZ015", "ACM002", "ACX001", "AC9022", "AC9023", "AC9027", "ADA015", "ADB028", "ADC037", "AB4009", "AB7008", "AB7013", "AB7020", and "AB9001".
 
 ```{r}
-names(non_zero_coefficients[11:22])
+LassoVariablesSelected <- WhiteIlliteracyHead[c("ACZ015", "ACM002", "ACX001", "AC9022", "AC9023", "AC9027", "ADA015", "ADB028", "ADC037", "AB4009", "AB7008", "AB7013", "AB7020", "AB9001")]
+summary(LassoVariablesSelected)
 
 # Extract descriptions for the variables with non-zero coefficients
-variable_descriptions <- WhiteIlliteracyHead[, names(non_zero_coefficients)[11:22]]
+variable_descriptions <- LassoVariablesSelected
 
 # Since the output may be in a format that's not easy to read or handle (like a list or matrix row),
 # convert it to a more readable format, such as a named vector or data frame
 descriptions_vector <- as.vector(t(variable_descriptions))
 
 # Set names for easy readability
-names(descriptions_vector) <- names(non_zero_coefficients[11:22])
+names(descriptions_vector) <- names(LassoVariablesSelected)
 
 # Print descriptions
 print(descriptions_vector)
 ```
 For ACKY as the response variable, Lasso gave us a model with the following predictor variables:
-- ACK001 - Total White Persons Over 20 Who Cannot Read or Write
-- ACZ014 - Slave >> Male >> 10 to 23 years of age
-- AC1002 - Persons Employed in Agriculture
+
+
+- ACZ015 - Slave >> Male >> 24 to 35 years of age
 - ACM002 - Weekly newspapers
-- ACV001 - Total Male Population
 - ACX001 - 0=NO 1=YES (Navigable Waterway)
-- ADB028 - Printing and Binding: Weekly newspapers
-- ADE023 - Men Employed in Manufacturing Establishments: Distilled and fermented liquors
-- ADC016 - Capital Invested in Manufacturing Establishments: Wool
+- AC9022 - Total Number of Establishments: Manufacturing: Mills: Flouring mills
+- AC9023 - Total Number of Establishments: Manufacturing: Mills: Grist mills
+- AC9027 - Total Number of Establishments: Manufacturing: Distilled and Fermented Liquors: Distilleries
+- ADA015 - Total Value of Production of Establishments: Manufacturing Products: Earthenware manufactured articles
+- ADB028 - Total Produced Number of Printing and Binding: Weekly newspapers
 - ADC037 - Capital Invested in Manufacturing Establishments: Mills
-- ADD002 - Persons employed in agriculture
-- Confederate - Joined Confederacy and Raised Arms Against The United States = 1, Union = 0
-and as mentioned above, those predictor variables were in addition to the factor-predictor variable the STATE factors: "STATEArkansas"       "STATEKentucky"       "STATEMichigan"       "STATEMissouri"    "STATENew York"       "STATENorth Carolina" "STATEOhio"           "STATEPennsylvania"  
+- AB4009 - Various crops: Beeswax (pounds)
+- AB7008 - Various crops: Hops (pounds)
+- AB7013 - Various crops: Hemp (tons)
+- AB7020 - Cotton, silk, sugar, etc.: Cane sugar (pounds)
+- AB9001 - Estimated total crop output value
 
 
 
@@ -527,13 +544,17 @@ RMSE_lasso_all=sqrt(mean((y_all-pred_lasso)^2))
 RMSE_lasso_all
 ```
 
-### The full lasso model had an RMSE of $0.09297063$	using the best lambda value of $0.007138227$. This is an improvement over the testing lasso RMSE of $0.1075233$.
+### The full lasso model had an RMSE of $0.1184195$	using the best lambda value of $0.003542939$. This is an improvement over the testing lasso RMSE of $0.1248152$.
+
+
 
 # best subset
 ```{r}
 library(leaps)
-best_subset <- regsubsets(ACKY~.-STATE,data=train,method="exhaustive", nvmax=200, really.big=TRUE)
-summary(best_subset)
+train_bestsubset <- train %>%
+  dplyr::select(ACKY, ACD001, ACN001, ACY, ACZYZ, ACH, ACI, ACL, ACM, AC1001, AC1002, AC1, ACE, AC3, AC9M, AC9C, AC9MF, ACS, ADAF, ADAMF, ADAM, ADCM, ADCC, ADCMFF, ADCMFT, ADCMFTH, ADCMFL, ADCMFSCL, ADCMFC, ADCMFGE, ADCMFFP, ADCMFPP, ADCMFO, ADEM, ADEC, ADEMF, AC5, AB2, AB5, AB8, ACSW, ACSNW, ACSP, ACSWP, Confederate)
+# best_subset <- regsubsets(ACKY~.,data=train_bestsubset,method="exhaustive", nvmax=200, really.big=TRUE)
+# summary(best_subset)
 ```
 
 
@@ -541,7 +562,7 @@ summary(best_subset)
 # Histograms of predictor variables distributions
 ```{r, message=FALSE}
 modelvariables <- train %>%
-  dplyr::select(ACKY, ACD001, ACN001, ACK001, ACY, ACZYZ, ACH, ACI, ACL, ACM, AC1, ACE, ACS, ACSW, ACSNW, ACSP, ACSWP, Confederate)
+  dplyr::select(ACKY, ACD001, ACN001, ACY, ACZYZ, ACH, ACI, ACL, ACM, AC1, ACE, ACS, ACSW, ACSNW, ACSP, ACSWP, Confederate, ACZ015, ACM002, ACX001, AC9022, AC9023, AC9027, ADA015, ADB028, ADC037, AB4009, AB7008, AB7013, AB7020, AB9001)
 
 png("histograms.png", width = 1200, height = 1200, res=108)
 par(mfrow=c(4, 5), mar=c(2, 2, 2, 1) + 0.1, oma=c(0, 0, 4, 0))
