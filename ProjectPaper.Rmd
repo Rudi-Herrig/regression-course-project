@@ -529,6 +529,12 @@ RMSE_lasso_all
 
 ### The full lasso model had an RMSE of $0.09297063$	using the best lambda value of $0.007138227$. This is an improvement over the testing lasso RMSE of $0.1075233$.
 
+# best subset
+```{r}
+library(leaps)
+best_subset <- regsubsets(ACKY~.-STATE,data=train,method="exhaustive", nvmax=200, really.big=TRUE)
+summary(best_subset)
+```
 
 
 # For Paper 1 stuff
