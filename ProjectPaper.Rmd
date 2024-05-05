@@ -1,0 +1,555 @@
+---
+title: "Project Paper 1 - Revised"
+author: "Rudi Herrig and Jordan Kim"
+date: "5 May 2024"
+output:
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(tinytex)
+library(readxl)
+library(tidyverse)
+library(stringr)
+library(magrittr)
+library(ggplot2)
+# install.packages("corrr")
+library(corrr)
+# install.packages("corrplot")
+library(corrplot)
+
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(out.width = "60%",fig.align='center')
+```
+
+I wanted to try creating a binary response variable indicating whether a county joined the South because the state in which it is located fought against the Union. I will use the following states: Alabama, Arkansas, Florida, Georgia, Louisiana, Mississippi, North Carolina, South Carolina, Tennessee, Texas, and Virginia. I will create a new variable, Confederate, which is equal to 1 if the county is in one of these states, and 0 if the county is not in one of these states. I will use the mutate function to create this new variable.
+
+```{r}
+# 1280 rows
+# ADB - production of industries
+# ADE - Men employed in selected industries
+production <- read_xlsx("USCensus_1840_county.xlsx")
+# to check for data structure, `summary(production)` is used
+
+# 1280 rows
+# ACX - County Borders Navigable waterway, 1 if yes
+navig <- read_xlsx("USCensusData1840.xlsx")
+# There was an extra row in `navig` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
+navig <- navig[-101,]
+
+# 1280 rows
+# ADC - Capital Invested
+# ADD - Persons Employed
+capital <- read_xlsx("USCensusData1840_2.xlsx")
+
+# 1280 rows
+# ACK001 - 
+literacy <- read_xlsx("USCensus1840Literacy.xlsx")
+# Just like `navig`, there was an extra row in `literacy` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
+literacy <- literacy[-101,]
+```
+
+```{r}
+# bigboy is all the data sets combined
+# bigboy <- production %>% inner_join(navig) %>% inner_join(capital) %>% inner_join(literacy)
+
+# bignav is to try to salvage the navigable waterway variable as the response
+# bignav <- navig %>%  inner_join(capital) %>% inner_join(production)
+
+# 1280 rows
+# Population data
+population <- read_xlsx("USCensus_1840_counties.xlsx")
+
+population <- population[-101,] # removing Alexandria row
+
+# Adding the industry, manufacturing, and navigable waterway data to the population data
+# 1280 rows
+# ADB - production of industries
+# ADE - Men employed in selected industries
+production <- read_xlsx("USCensus_1840_county.xlsx")
+# to check for data structure, `summary(production)` is used
+
+# 1280 rows
+# ACX - County Borders Navigable waterway, 1 if yes
+navig <- read_xlsx("USCensusData1840.xlsx")
+# There was an extra row in `navig` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
+navig <- navig[-101,]
+
+# 1280 rows
+# ADC - Capital Invested
+# ADD - Persons Employed
+capital <- read_xlsx("USCensusData1840_2.xlsx")
+
+# 1280 rows
+# ACK001 - 
+literacy <- read_xlsx("USCensus1840Literacy.xlsx")
+# Just like `navig`, there was an extra row in `literacy` for D.C.'s county of Alexandria (distinct from Rural County of Alexandria) so I removed it.
+literacy <- literacy[-101,]
+```
+
+```{r}
+# Specify the columns you want to join on explicitly
+join_columns <- c("GISJOIN", "YEAR", "STATE", "STATEA", "COUNTY", "COUNTYA", "AREANAME", "STATEICP", "COUNTYICP")
+
+# bigboy is all the data sets combined
+# bigboy <- production %>% inner_join(navig) %>% inner_join(capital) %>% inner_join(literacy)
+
+# bignav is to try to salvage the navigable waterway variable as the response
+# bignav <- navig %>%  inner_join(capital) %>% inner_join(production)
+
+# bigpop is all our data aggregated
+bigpop <- population %>%
+  inner_join(production, by = join_columns) %>%
+  inner_join(capital, by = join_columns)
+```
+
+```{r}
+# separating header row to further clean up the data set
+bigpophead <- bigpop %>% slice_head()
+
+# removing header row
+bigpopdata <- bigpop[-1,]
+
+# Converting our data from chr to dbl with as.numeric()
+bigpopdata[,10:ncol(bigpopdata)] <- as.data.frame(apply(bigpopdata[,10:ncol(bigpopdata)], 2, function(x) (as.numeric(x))))
+
+# population_head <- population %>% slice_head() # separating header row to further clean up the data set
+# popdata <- population[-1,] # removing header row
+
+
+# Creating new variables
+bigpopdata <- bigpopdata %>%
+  mutate(STATE=as.factor(STATE),
+         COUNTY=as.factor(COUNTY),
+         ACZYZ=ACZ/(ACY+ACZ), # ACZYZ is the Percentage of Colored population
+         ACKY=ACK001/ACY, # ACKY is the Percentage of White Illiteracy
+         ACH=ACH001+ACH002+ACH003, # ACH is the total number of Learning Institutions
+         ACI=ACI001+ACI002+ACI003, # ACI is the total number of Students
+         ACL=ACL001+ACL002, # ACL is Number of Printing and Binding Services
+         ACM=ACM001+ACM002+ACM003+ACM004, # ACM is Number of Newspapers and Periodicals
+         AC1=AC1003+AC1004+AC1005+AC1006+AC1007, # AC1 is the total number of Employed persons in Learned Professions Requiring Literacy
+         ACE=AC3003+ACE001, # ACE is the number of White Deaf, Dumb, and Blind Persons Over 20
+         ACS=ACS001+ACS002+ACS003, # ACS is Total Persons
+         ACSW= ACS001, # ACSW is Total White Persons
+         ACSNW= ACS002+ACS003, # ACSNW is Total Non-White Persons
+         ACSP=ACSNW/ACS, # ACSP is the percentage of non-white population
+         ACSWP=ACSW/ACS, # ACSWP is the percentage of white population
+         Confederate=as.integer(STATE %in% c("Alabama", "Arkansas", "Florida", "Georgia", "Louisiana", "Mississippi", "North Carolina", "South Carolina", "Tennessee", "Texas", "Virginia")))
+
+bigpopdatahead <- bigpophead %>%
+  mutate(ACD001="Total Population",
+         ACN001="Total Urban Population",
+         ACZYZ="Percentage of Colored Population",
+         ACKY="Percentage of White Illiteracy",
+         ACH="Total Learning Institutions",
+         ACI="Total Number of Students",
+         ACL="Number of Printing and Binding Services",
+         ACM="Number of Newspapers and Periodicals",
+         AC1="Total Employed in Learned Professions",
+         ACE="White Deaf, Dumb, and Blind Persons Over 20",
+         ACS="Total Persons",
+         ACSW="Total White Persons",
+         ACSNW="Total Non-White Persons",
+         ACSP="Percentage of Non-White Population",
+         ACSWP="Percentage of White Population",
+         Confederate="Joined Confederacy and Raised Arms Against The United States = 1")
+
+bigpopdata <- bigpopdata %>%
+  na.omit() # removing rows with NA values
+
+# Re-adding the header row with new descriptions - but this converted the whole list into 'chr' NO!!!!
+# Create a list to keep them together but separate for statistical analyses
+bigpopdata_list <- list(Headers = bigpopdatahead, Data = bigpopdata)
+
+# glimpse(popdata_list)
+```
+
+Filtering for only the columns we're interested in and creating a new list `WhiteIlliterate`
+```{r}
+# WhiteIlliteracy <- popdata_list$Data  %>%
+#   select(GISJOIN, STATE, STATEA, STATEICP, COUNTY, COUNTYA, COUNTYICP, ACD001, ACN001,  ACK001, ACY, ACKY, ACZYZ, ACH, ACI, ACL, ACM, AC1, ACE, ACS, ACSW, ACSNW, ACSP, ACSWP, Confederate)
+# glimpse(WhiteIlliteracy)
+# WhiteIlliteracyHead <- popdata_list$Headers %>%
+#   select(GISJOIN, STATE, STATEA, STATEICP, COUNTY, COUNTYA, COUNTYICP, ACD001, ACN001,  ACK001, ACY, ACKY, ACZYZ, ACH, ACI, ACL, ACM, AC1, ACE, ACS, ACSW, ACSNW, ACSP, ACSWP, Confederate)
+# glimpse(WhiteIlliteracyHead)
+# WhiteIlliterate <- list(Headers = WhiteIlliteracyHead, Data = WhiteIlliteracy)
+# glimpse(WhiteIlliterate)
+WhiteIlliteracy <- bigpopdata %>%
+  dplyr::select(-c(1:2,4,6:9)) # removing unnecessary columns
+WhiteIlliteracyHead <- bigpopdatahead %>%
+  dplyr::select(-c(1:2,4,6:9)) # removing unnecessary columns
+WhiteIlliterate <- list(Headers = WhiteIlliteracyHead, Data = WhiteIlliteracy)
+```
+
+```{r, include=FALSE}
+if (!dir.exists("figures")) {
+  dir.create("figures")
+}
+```
+### Visualizing data we're interested in to learn more about relationships among data set with Blue representing Union counties and Red representing Confederate counties
+#### The visualization of the response variable, White Illiteracy, with Percentage of Non-White Population as potential predictor
+```{r, fig.path="figures/", message=FALSE}
+ACSP <- ggplot(WhiteIlliterate$Data, aes(x=ACSP, y=ACKY, color=factor(Confederate))) +
+  geom_point(alpha=0.2) +
+  geom_jitter(height=0.05, size=2, alpha=0.6) +
+  scale_color_manual(values=c("0"="blue", "1"="red"),
+                     labels=c("Union", "Confederate"),
+                     name="Civil War Alignment") +
+  theme_bw() +
+  labs(x="Percentage of Non-White Population", y="White Illiteracy Rate (%)",
+       title="Impact of Racial Composition on White Illiteracy",
+       subtitle="Comparison by Civil War Alignment")
+ACSP
+ggsave("ACSP.png", plot=ACSP)
+```
+
+#### Visualizing the response variable, White Illiteracy, with Number of Newspapers and Periodicals produced as potential predictor
+```{r, fig.path="figures/", message=FALSE}
+ACM <- ggplot(WhiteIlliterate$Data, aes(x=ACM, y=ACKY, color=factor(Confederate))) +
+  geom_point(alpha=0.2) +
+  geom_jitter(height=0.05, size=2, alpha=0.6) +
+  scale_color_manual(values=c("0"="blue", "1"="red"),
+                     labels=c("Union", "Confederate"),
+                     name="Civil War Alignment") +
+  theme_bw() +
+  labs(x="Number of Newspapers and Periodicals", y="White Illiteracy Rate (%)",
+       title="Implicating Impact of Newspapers Media Produced on White Illiteracy Rate",
+       subtitle="Comparison by Civil War Alignment")
+ACM
+ggsave("ACM.png", plot=ACM)
+```
+
+#### Visualizing the response variable, White Illiteracy, with Number of Students as potential predictor
+```{r, fig.path="figures/", message=FALSE}
+ACI <- ggplot(WhiteIlliterate$Data, aes(x=ACI, y=ACKY, color=factor(Confederate))) +
+  geom_point(alpha=0.2) +
+  geom_jitter(height=0.05, size=2, alpha=0.6) +
+  scale_color_manual(values=c("0"="blue", "1"="red"),
+                     labels=c("Union", "Confederate"),
+                     name="Civil War Alignment") +
+  theme_bw() +
+  labs(x="Number of Students", y="White Illiteracy Rate (%)",
+       title="Impact of Educational Enrollment on Literacy",
+       subtitle="Comparison by Civil War Alignment")
+ACI
+ggsave("ACI.png", plot=ACI)
+```
+
+#### Visualizing the relationship between the Number of Learning Institutions and White Illiteracy
+```{r, fig.path="figures/", message=FALSE}
+ACH <- ggplot(WhiteIlliterate$Data, aes(x=ACH, y=ACKY, color=factor(Confederate))) +
+  geom_point(alpha=0.2) +  
+  geom_jitter(height=0.05, size=2, alpha=0.6) +  
+  scale_color_manual(values=c("0"="blue", "1"="red"),  # Colors for Union and Confederate
+                     labels=c("Union", "Confederate"),
+                     name="Civil War Alignment") +
+  theme_bw() +
+  labs(x="Number of Learning Institutions",
+       y="White Illiteracy Rate (%)",
+       title="Influence of Educational Institutions on Literacy",
+       subtitle="Comparison by Civil War Alignment")
+ACH
+ggsave("ACH.png", plot=ACH)
+```
+
+#### Visualizing the response variable, White Illiteracy, with Number of Persons in Learned Professions Requiring Literacy as potential predictor
+```{r, fig.path="figures/", message=FALSE}
+AC1 <- ggplot(bigpopdata, aes(x=AC1, y=ACKY, color=factor(Confederate))) +
+  geom_jitter(width=0.2, height=0.2, alpha=0.6) + 
+  scale_color_manual(values=c("0"="blue", "1"="red"),  # Colors for Union and Confederate
+                     labels=c("0"="Union", "1"="Confederate"),
+                     name="Civil War Alignment") + 
+  theme_bw() + 
+  labs(x="Number of Persons in Learned Professions",
+       y="White Illiteracy Rate (%)",
+       title="Civil War Alignment by County",
+       subtitle="Based on Confederate or Union alignment during the Civil War")
+AC1
+ggsave("AC1.png", plot=AC1)
+```
+
+### Visualizing new binary variable, `Confederate`, as potential response, with White Illiteracy as potential predictor
+```{r, fig.path="figures/"}
+Confederate <- ggplot(WhiteIlliterate$Data, aes(x=ACKY, y=Confederate)) +
+  geom_point() +
+  geom_jitter(height=0.05,size=2,alpha=0.2) +
+  theme_bw()
+Confederate
+ggsave("Confederate.png", plot=Confederate)
+```
+
+```{r}
+# I wanted to write the cleaned up data frame into a file.
+# install.packages("openxlsx")
+# library(openxlsx)
+
+# Create a new workbook
+# wb <- createWorkbook()
+# Add sheets to the workbook
+# addWorksheet(wb, "Data")
+# addWorksheet(wb, "Headers")
+# Write data to the respective sheets
+# writeData(wb, sheet = "Data", WhiteIlliteracy)
+# writeData(wb, sheet = "Headers", WhiteIlliteracyHead)
+# Save the workbook
+# saveWorkbook(wb, "WhiteIlliterate.xlsx", overwrite = TRUE)
+
+# Repeat the process for the other list
+# wb_bigpopdata <- createWorkbook()
+# addWorksheet(wb_bigpopdata, "Data")
+# addWorksheet(wb_bigpopdata, "Headers")
+# writeData(wb_bigpopdata, sheet = "Data", bigpopdata_list$Data)
+# writeData(wb_bigpopdata, sheet = "Headers", bigpopdata_list$Headers)
+# saveWorkbook(wb_bigpopdata, "bigpopdata.xlsx", overwrite = TRUE)
+```
+
+
+# Null Model
+```{r}
+mean(WhiteIlliteracy$ACKY)
+```
+The mean White Illiteracy Rate for counties is $0.149582$, or $14.96\%$. We will use the RMSE to evaluate our models' performances. We will also look at the distributions of the predictor variables and the correlation between the predictor variables and the response variable.
+
+We will also utilize various techniques to try to find the best model, from shrinkage, dimension reduction, model selection and variable selection. We will also look at the distributions of the predictor variables and the correlation between the predictor variables and the response variable.
+
+# Splitting Data into Training and Testing Sets
+```{r}
+# ready to split into training and testing data 3:1
+set.seed(303)
+
+trows <- sample(x=nrow(WhiteIlliterate$Data),size=floor(0.75*nrow(WhiteIlliterate$Data)),replace=FALSE)
+#separate data
+train <- WhiteIlliterate$Data[trows,]
+train <- train %>%
+  dplyr::select(-COUNTY)
+test <- WhiteIlliterate$Data[-trows,]
+test <- test %>%
+  dplyr::select(-COUNTY)
+```
+
+
+# Forward Stepwise Variable Selection
+```{r}
+# Load the olsrr package
+library(olsrr)
+# Load the MASS package
+library(MASS)
+#define the ols model
+model <- glm(ACKY~.-COUNTY,data=WhiteIlliteracy, family = "gaussian")
+
+# Perform forward stepwise model selection using stepAIC
+stepwise_model <- stepAIC(model, direction = "forward", trace = 1)
+
+# Review the selected model
+model_summary <- summary(stepwise_model)
+
+# Extract the coefficients table from the summary
+coefficients_table <- model_summary$coefficients
+
+# Filter for significant coefficients at the 99% confidence level
+significant_coefficients <- coefficients_table[coefficients_table[, "Pr(>|t|)"] < 0.01, ]
+
+# Print significant coefficients
+print(significant_coefficients)
+```
+Forward Stepwise Selection using OLS led to `STATE(factors)` and `ACK001`, `ACF002`, `ADB002`, and `ACZYZ` as predictor variables. We will use these variables to build a multiple linear regression model.
+```{r}
+# building multiple linear regression model using training dataset
+forwardmodel <- glm(ACKY~STATE+ACK001+ACF002+ADB002+ACZYZ, data = train, family = "gaussian")
+predictions <- predict(forwardmodel, newdata = test, type="response")
+RMSE_forward <- sqrt(mean((test$ACKY - predictions)^2))
+RMSE_forward
+```
+### And our Forward Stepwise selection method using AIC as criteria gave us a model using `STATE`, `ACK001`, `ACF002`, `ADB002`, and `ACZYZ` as predictor variables, with a testing RMSE of $0.102337$.
+
+
+# Ridge and Lasso Regression (plus OLS glm)
+```{r}
+#define X matrices
+x_train <- model.matrix(ACKY~.,data=train)[,-1]
+x_test <- model.matrix(ACKY~.,data=test)[,-1]
+
+#define y vector
+y_train <- train$ACKY
+y_test <- test$ACKY
+```
+
+```{r}
+#load glmnet library
+library(glmnet)
+lambda_cv <- cv.glmnet(x=x_train,y=y_train,family="gaussian",alpha=1,nfolds=5)
+plot(lambda_cv)
+```
+```{r}
+png("cvplot.png", width = 1200, height = 1200, res=144)
+plot(lambda_cv)
+dev.off()
+```
+
+
+```{r}
+lambda_best <- lambda_cv$lambda.min
+lambda_best
+```
+
+
+```{r}
+#fit models
+model_ols <- glm(ACKY~.,data=train,family="gaussian")
+model_ridge <- glmnet(x=x_train,y=y_train,family="gaussian", standardize=TRUE, alpha=0)
+model_lasso <- glmnet(x=x_train,y=y_train,family="gaussian",standardize=TRUE,alpha=1)
+
+# summary(model_ols)
+
+# testing lasso rmse
+test_pred_lasso <- predict(model_lasso,newx=x_test,s=lambda_best,type="response")
+
+RMSE_lasso=sqrt(mean((test$ACKY-test_pred_lasso)^2))
+RMSE_lasso
+
+# testing ordinary least squares and ridge regression model RMSE
+test_pred_ols=predict(model_ols,newdata=test,type="response")
+test_pred_ridge=predict(model_ridge,newx=x_test,s=lambda_best,type="response")
+
+RMSE_ols=sqrt(mean((test$ACKY-test_pred_ols)^2))
+RMSE_ols
+RMSE_ridge=sqrt(mean((test$ACKY-test_pred_ridge)^2))
+RMSE_ridge
+```
+Our glm model using Ordinary Least Squares model yielded RMSE of $0.9049026$.
+Our model using Ridge Regression model yielded RMSE of $0.1075233$.
+Our best model was using Lasso Regression model with testing RMSE of $0.1014527$.
+
+# building full lasso model using all data
+```{r}
+best_WhiteIlliteracy <- WhiteIlliteracy %>%
+  dplyr::select(-COUNTY)
+
+#convert all sample data to matrix form
+x_all <- model.matrix(ACKY~.,data=best_WhiteIlliteracy)[,-1]
+y_all <- best_WhiteIlliteracy$ACKY
+
+#fit lasso model using all sample data
+model_best <- glmnet(x=x_all,y=y_all,family="gaussian",standardize=TRUE,alpha=1)
+
+#view coefficients for best model
+coefficients <- predict(model_best,type="coefficients",s=lambda_best)
+
+# Convert the sparse matrix to a regular numeric vector
+coefficients_vector <- as.vector(coefficients)
+coefficients_vector[length(coefficients_vector)]
+# Get the names of all predictors
+predictor_names <- rownames(coefficients) # remove intercept
+
+# Combine names and coefficients into a named vector
+named_coefficients <- setNames(coefficients_vector, predictor_names)
+
+# Filter to find non-zero coefficients
+non_zero_coefficients <- named_coefficients[named_coefficients != 0]
+
+# Print the names of the variables with non-zero coefficients
+non_zero_coefficients[-1] # exclude the intercept
+
+names(non_zero_coefficients[2:10])
+```
+For ACKY as the response variable and also using STATE factors as part of the predictive model, we get 
+STATES: "STATEArkansas"   "STATEIowa Territory"    "STATEKentucky"       "STATEMichigan"       "STATEMissouri"    "STATENew York"       "STATENorth Carolina" "STATEOhio"           "STATEPennsylvania" as 'predictor variable factors(?)'.
+
+```{r}
+names(non_zero_coefficients[11:22])
+
+# Extract descriptions for the variables with non-zero coefficients
+variable_descriptions <- WhiteIlliteracyHead[, names(non_zero_coefficients)[11:22]]
+
+# Since the output may be in a format that's not easy to read or handle (like a list or matrix row),
+# convert it to a more readable format, such as a named vector or data frame
+descriptions_vector <- as.vector(t(variable_descriptions))
+
+# Set names for easy readability
+names(descriptions_vector) <- names(non_zero_coefficients[11:22])
+
+# Print descriptions
+print(descriptions_vector)
+```
+For ACKY as the response variable, Lasso gave us a model with the following predictor variables:
+- ACK001 - Total White Persons Over 20 Who Cannot Read or Write
+- ACZ014 - Slave >> Male >> 10 to 23 years of age
+- AC1002 - Persons Employed in Agriculture
+- ACM002 - Weekly newspapers
+- ACV001 - Total Male Population
+- ACX001 - 0=NO 1=YES (Navigable Waterway)
+- ADB028 - Printing and Binding: Weekly newspapers
+- ADE023 - Men Employed in Manufacturing Establishments: Distilled and fermented liquors
+- ADC016 - Capital Invested in Manufacturing Establishments: Wool
+- ADC037 - Capital Invested in Manufacturing Establishments: Mills
+- ADD002 - Persons employed in agriculture
+- Confederate - Joined Confederacy and Raised Arms Against The United States = 1, Union = 0
+and as mentioned above, those predictor variables were in addition to the factor-predictor variable the STATE factors: "STATEArkansas"       "STATEKentucky"       "STATEMichigan"       "STATEMissouri"    "STATENew York"       "STATENorth Carolina" "STATEOhio"           "STATEPennsylvania"  
+
+
+
+
+
+# Mistakenly performed modeling
+For ACK001 as the response variable (mistakenly performed) Lasso gave us a model with the following variables:
+- ACD001 - Total Population
+- ACZ013 - Slave >> Male >> Under 10 years of age
+- AC1003 - Persons Employed in Commerce
+- AC1006 - Persons Employed in Navigation of canals, lakes, and rivers
+- AC3002 - Number of Deaf and Dumb White Persons 14 to 24 years old
+- ACE002 - Colored Blind Persons
+- ACF003 - Colored Insane and Idiot Persons >> At public charge
+- ACF004 - Colored Insane and Idiot Persons >> At private charge
+- ACH001 - Universities or colleges
+- ACM003 - Semi and tri-weekly newspapers
+- ACR002 - Total White Female Population
+- ACV002 - Total Female Population
+- ADB020 - Fisheries: Barrels of Pickled Fish
+- ADB026 - Bar Iron: Tons Produced
+- ADB029 - Printing and Binding: Semi- and tri-weekly newspapers
+- ADE002 - Men Employed in Mining Establishments: Lead
+- ADE005 - Men Employed in Mining Establishments: Anthracite coal
+- ADE017 - Men Employed in Manufacturing Establishments: Weapons
+- ADE019 - Men Employed in Manufacturing Establishments: Various metals
+- ADE024 - Men Employed in Manufacturing Establishments: Powder mills
+- ADC017 - Capital Invested in Manufacturing Establishments: Cotton
+- ADC036 - Capital Invested in Manufacturing Establishments: Carriages and wagons
+- ADD003 - Persons employed in commerce
+- ADD006 - Persons employed in inland navigation
+- ACH - Total Learning Institutions
+
+```{r}
+pred_lasso <- predict(model_best,newx=x_all,s=lambda_best,type="response")
+RMSE_lasso_all=sqrt(mean((y_all-pred_lasso)^2))
+RMSE_lasso_all
+```
+
+### The full lasso model had an RMSE of $0.09297063$	using the best lambda value of $0.007138227$. This is an improvement over the testing lasso RMSE of $0.1075233$.
+
+
+
+# For Paper 1 stuff
+# Histograms of predictor variables distributions
+```{r, message=FALSE}
+modelvariables <- train %>%
+  dplyr::select(ACKY, ACD001, ACN001, ACK001, ACY, ACZYZ, ACH, ACI, ACL, ACM, AC1, ACE, ACS, ACSW, ACSNW, ACSP, ACSWP, Confederate)
+
+png("histograms.png", width = 1200, height = 1200, res=108)
+par(mfrow=c(4, 5), mar=c(2, 2, 2, 1) + 0.1, oma=c(0, 0, 4, 0))
+# Loop over numeric columns and create histograms
+for (i in 1:ncol(modelvariables)) {
+valid_data <- modelvariables[[i]][!is.na(modelvariables[[i]])]
+if (length(valid_data) > 0) {
+hist(valid_data, main=colnames(modelvariables)[i], xlab=colnames(modelvariables)[i],
+col="lightblue", border="darkblue")  # Using light blue fill with dark blue borders
+} else {
+plot.new()
+text(0.5, 0.5, "No data available")
+}
+}
+mtext("Distributions of Predictor Variables: Histograms", side=3, outer=TRUE, line=1, cex=1.5)
+#dev.off()
+```
